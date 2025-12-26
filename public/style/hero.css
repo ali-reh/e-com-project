@@ -1,8 +1,9 @@
 .hero-section {
   background-color: rgba(211, 211, 211, 0.103);
-  height: 60vh;
+  height: 50vh;
   display: flex;
   align-items: center;
+  margin-top: 60px;
 }
 
 .hero-content {
@@ -17,7 +18,7 @@
 }
 
 .hero-text {
-  font-size: 1.125rem;
+  font-size: 0.95rem;
   color: #6c757d;
 }
 
@@ -32,27 +33,20 @@
   }
 }
 
-
-/* Hero-specific responsive breakpoints (sm, md, lg, xl, xxl) */
 @media (min-width: 576px) {
-  .hero-section { height: 65vh; }
   .hero-text { font-size: 1.05rem; }
 }
 
 @media (min-width: 768px) {
-  .hero-section { height: 55vh; }
 }
 
 @media (min-width: 992px) {
-  .hero-section { height: 60vh; }
   .hero-title { font-size: clamp(2.75rem, 4.5vw, 4rem); }
 }
 
 @media (min-width: 1200px) {
-  .hero-section { height: 62vh; }
 }
 
 @media (min-width: 1400px) {
-  .hero-section { height: 68vh; }
   .hero-title { font-size: 4.25rem; }
 }
