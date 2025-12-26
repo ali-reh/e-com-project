@@ -1,0 +1,16 @@
+:root{
+  --primary-color: rgb(41, 121, 77);
+  --secondary-color: grey;
+}
+
+/* Typography helpers used across the site */
+.luxury-font{
+  font-family: "Playfair Display", sans-serif;
+  font-weight: 700;
+}
+.primary-font{
+  font-family: "Jost", sans-serif;
+}
+.primary-color-text{
+  color: var(--primary-color);
+}

@@ -1,0 +1,41 @@
+.btn {
+  transition: all 0.2s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.primary-color-btn{
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid var(--primary-color);
+}
+.primary-color-btn:hover{
+    background-color: white;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.secondary-color-btn{
+    background-color: var(--secondary-color);
+    color: white;
+    border: 1px solid var(--secondary-color);
+}
+.secondary-color-btn:hover{
+    background-color: white;
+    color: var(--secondary-color);
+    border: 1px solid var(--secondary-color);
+}
+
+#hero-buttons{
+    font-size: 16px !important;
+}
