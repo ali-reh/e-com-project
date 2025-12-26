@@ -1,6 +1,7 @@
 .hero-section {
   background-color: rgba(211, 211, 211, 0.103);
-  height: 50vh;
+  /* Desktop-first: larger hero area by default */
+  height: 60vh;
   display: flex;
   align-items: center;
   margin-top: 60px;
@@ -11,14 +12,15 @@
 }
 
 .hero-title {
-  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  /* Desktop-first large heading */
+  font-size: 4rem;
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.05;
   letter-spacing: -0.02em;
 }
 
 .hero-text {
-  font-size: 0.95rem;
+  font-size: 1.125rem;
   color: #6c757d;
 }
 
@@ -33,20 +35,27 @@
   }
 }
 
-@media (min-width: 576px) {
+/* Reduce for narrower screens (PC-first) */
+@media (max-width: 1199.98px) {
+  .hero-section { height: 56vh; }
+  .hero-title { font-size: 3.5rem; }
   .hero-text { font-size: 1.05rem; }
 }
 
-@media (min-width: 768px) {
+@media (max-width: 991.98px) {
+  .hero-section { height: 52vh; }
+  .hero-title { font-size: 3rem; }
+  .hero-text { font-size: 1rem; }
 }
 
-@media (min-width: 992px) {
-  .hero-title { font-size: clamp(2.75rem, 4.5vw, 4rem); }
+@media (max-width: 767.98px) {
+  .hero-section { height: 48vh; }
+  .hero-title { font-size: 2.4rem; }
+  .hero-text { font-size: 0.95rem; }
 }
 
-@media (min-width: 1200px) {
-}
-
-@media (min-width: 1400px) {
-  .hero-title { font-size: 4.25rem; }
+@media (max-width: 575.98px) {
+  .hero-section { height: 44vh; }
+  .hero-title { font-size: 2rem; }
+  .hero-text { font-size: 0.9rem; }
 }

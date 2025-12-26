@@ -48,15 +48,12 @@
   font-size: 20px;
 }
 
-@media (max-width: 575.98px) {
-  .navbar-brand { font-size: 20px !important; }
-}
-
-@media (min-width: 576px) and (max-width: 991.98px) {
+/* Desktop-first: default font-size is set above (25px). Reduce sizes for narrower viewports */
+@media (max-width: 991.98px) {
   .navbar-brand { font-size: 22px !important; }
 }
 
-@media (min-width: 992px) {
-    .navbar-brand { font-size: 25px !important; }
+@media (max-width: 575.98px) {
+  .navbar-brand { font-size: 20px !important; }
 }
 

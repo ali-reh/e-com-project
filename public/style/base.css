@@ -14,3 +14,6 @@
 .primary-color-text{
   color: var(--primary-color);
 }
+* {
+  font-family: "Jost", sans-serif;
+}

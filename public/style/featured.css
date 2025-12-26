@@ -7,23 +7,23 @@
   align-items: center;
 }
   :root {
-    --featured-gap: 2rem;
+    --featured-gap: 0.5rem;
   }
 
   .featured-wrap {
-    padding: 4rem 0;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
   }
 
   .featured-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
     margin-bottom: 2rem;
   }
 
   .featured-header h2 {
     margin: 0 0 0.25rem 0;
-    font-size: 2.25rem;
+    font-size: 2rem;
     line-height: 1.05;
     letter-spacing: -0.02em;
     color: #222;
@@ -32,13 +32,13 @@
   .featured-subtitle {
     margin: 0;
     color: #6c757d;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
   }
 
   .featured-grid {
     display: grid;
     gap: var(--featured-gap);
-    grid-template-columns: repeat(2, 1fr);;
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .product-card {
@@ -53,10 +53,12 @@
 
   .product-media {
     width: 100%;
+    border-radius: 10px;
     aspect-ratio: 1/2;
     object-fit: cover;
     display: block;
-    max-height: 380px;
+    /* Desktop default */
+    max-height: 400px;
     height: auto;
   }
 
@@ -105,17 +107,20 @@
     font-size: 0.8rem;
   }
 
-  @media (min-width: 576px) {
-    .featured-grid { grid-template-columns: repeat(2, 1fr); }
-    .product-media { max-height: 320px; }
-  }
-
-  @media (min-width: 768px) {
+  /* Reduce columns and image sizes on narrower screens (PC-first) */
+  @media (max-width: 1199.98px) {
     .featured-grid { grid-template-columns: repeat(3, 1fr); }
     .product-media { max-height: 360px; }
   }
 
-  @media (min-width: 992px) {
-    .featured-grid { grid-template-columns: repeat(4, 1fr); }
-    .product-media { max-height: 400px; }
+  @media (max-width: 991.98px) {
+    .featured-grid { grid-template-columns: repeat(2, 1fr); }
+    .product-media { max-height: 320px; }
+  }
+
+  @media (max-width: 575.98px) {
+    .product-card {
+        margin: 10px;
+        width: fit-content;
+    }
   }
