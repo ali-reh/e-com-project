@@ -26,11 +26,11 @@
     <div id="header"></div>
 
     <script>
-    fetch('pages/header.html')
-    .then(res => res.text())
-    .then(html => {
-        document.getElementById('header').innerHTML = html;
-    });
+        fetch('pages/header.html')
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('header').innerHTML = html;
+        });
     </script>
 
     <section class="hero-section d-flex flex-column justify-content-center">
@@ -67,7 +67,7 @@
             <article class="product-card">
             <div class="media-wrap">
                 <img src="images/image-1.jpg" alt="Classic Leather Tote">
-                <button class="add-cart">+</button>
+                <a class="add-cart"><i class="bi bi-plus"></i></a>
             </div>
             <div class="product-body">
                 <h3 class="product-title">Classic Leather Tote</h3>
@@ -82,7 +82,7 @@
             <article class="product-card">
             <div class="media-wrap">
                 <img src="images/image-2.jpg" alt="Everyday Minimal Watch">
-                <button class="add-cart">+</button>
+                <a class="add-cart"><i class="bi bi-plus"></i></a>
             </div>
             <div class="product-body">
                 <h3 class="product-title">Everyday Minimal Watch</h3>
@@ -96,7 +96,7 @@
             <article class="product-card">
             <div class="media-wrap">
                 <img src="images/Gemini_Generated_Image_4ts9sn4ts9sn4ts9.png" alt="Wool Throw Blanket">
-                <button class="add-cart">+</button>
+                <a class="add-cart"><i class="bi bi-plus"></i></a>
             </div>
             <div class="product-body">
                 <h3 class="product-title">Wool Throw Blanket</h3>
@@ -110,7 +110,7 @@
             <article class="product-card">
             <div class="media-wrap">
                 <img src="images/Gemini_Generated_Image_chclj4chclj4chcl.png" alt="Ceramic Coffee Set">
-                <button class="add-cart">+</button>
+                <a class="add-cart"><i class="bi bi-plus"></i></a>
             </div>
             <div class="product-body">
                 <h3 class="product-title">Ceramic Coffee Set</h3>
@@ -152,14 +152,14 @@
         </div>
     </section>
 
-        <div id="footer"></div>
-        <script>
+    <div id="footer"></div>
+    <script>
         fetch('pages/footer.html')
         .then(res => res.text())
         .then(html => {
             document.getElementById('footer').innerHTML = html;
         });
-        </script>
+    </script>
 
 </body>
 </html>

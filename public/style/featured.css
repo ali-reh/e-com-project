@@ -85,20 +85,25 @@
   right: 1rem;
   width: 42px;
   height: 42px;
-  border-radius: 50%;
+  border-radius: 5px;
   border: none;
-  background: var(--primary-color);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.801);
+  color: grey;
   font-size: 1.4rem;
   cursor: pointer;
   opacity: 0;
   transform: scale(0.8);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
 }
 
 .product-card:hover .add-cart {
   opacity: 1;
-  transform: scale(1);
+  transform: scale(0.9);
 }
 
 /* BODY */
