@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="style/base.css">
     <link rel="stylesheet" href="style/buttons.css">
     <link rel="stylesheet" href="style/featured.css">
+    <link rel="stylesheet" href="style/footer.css">
 </head>
 <body>
 
@@ -120,6 +121,14 @@
             </article>
         </div>
     </section>
+        <div id="footer"></div>
+        <script>
+        fetch('pages/footer.html')
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('footer').innerHTML = html;
+        });
+        </script>
 
 </body>
 </html>
