@@ -1,5 +1,5 @@
 :root {
-  --featured-gap: 1.25rem;
+  --featured-gap: 5px;
 }
 
 .featured-wrap {
@@ -24,7 +24,6 @@
 /* GRID */
 .featured-grid {
   display: grid;
-  gap: var(--featured-gap);
   grid-template-columns: repeat(4, 1fr);
 }
 
@@ -35,6 +34,7 @@
   overflow: hidden;
   box-shadow: 0 12px 30px rgba(0,0,0,0.08);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
+  margin: var(--featured-gap);
 }
 
 .product-card:hover {
