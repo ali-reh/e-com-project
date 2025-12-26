@@ -1,0 +1,183 @@
+/* Modern Features Section Styling */
+
+.features-section {
+  background: linear-gradient(135deg, rgba(41, 121, 77, 0.02) 0%, rgba(156, 204, 101, 0.02) 100%);
+  padding: 4rem 0;
+  border-top: 1px solid rgba(41, 121, 77, 0.08);
+  border-bottom: 1px solid rgba(41, 121, 77, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.features-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(41, 121, 77, 0.05) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Feature Card */
+.feature-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(41, 121, 77, 0.08);
+  animation: slideUp 0.7s ease-out both;
+}
+
+.feature-card:nth-child(1) { animation-delay: 0.1s; }
+.feature-card:nth-child(2) { animation-delay: 0.2s; }
+.feature-card:nth-child(3) { animation-delay: 0.3s; }
+
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgb(41, 121, 77);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(41, 121, 77, 0.12);
+}
+
+/* Icon */
+.feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, rgb(41, 121, 77) 0%, #9ccc65 100%);
+  border-radius: 50%;
+  margin-bottom: 1.25rem;
+  color: white;
+  font-size: 1.75rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 20px rgba(41, 121, 77, 0.25);
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 12px 30px rgba(41, 121, 77, 0.35);
+}
+
+/* Title */
+.feature-title {
+  font-family: "Playfair Display", serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.3px;
+}
+
+/* Description */
+.feature-text {
+  color: #6c757d;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive: Desktop-first */
+@media (max-width: 1199.98px) {
+  .features-grid {
+    gap: 2rem;
+  }
+  
+  .feature-card {
+    padding: 1.75rem 1.25rem;
+  }
+  
+  .feature-title {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .features-section {
+    padding: 3rem 0;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .feature-card {
+    padding: 1.5rem 1rem;
+  }
+  
+  .feature-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem;
+  }
+  
+  .feature-title {
+    font-size: 1.1rem;
+  }
+  
+  .feature-text {
+    font-size: 0.9rem;
+  }
+  
+  .features-section::before {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .features-section {
+    padding: 2.5rem 0;
+  }
+  
+  .feature-card {
+    padding: 1.25rem 0.75rem;
+  }
+  
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 1rem;
+  }
+  
+  .feature-title {
+    font-size: 1rem;
+  }
+  
+  .feature-text {
+    font-size: 0.85rem;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
