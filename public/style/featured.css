@@ -133,7 +133,6 @@
 
 @media (max-width: 575.98px) {
   .product-card {
-    margin-left: 10px;
-    margin-right: 10px;
+    align-self: baseline;
   }
 }
