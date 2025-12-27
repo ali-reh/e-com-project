@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  // Matches the <div class="featured-grid"> in your HTML
   const grid = document.querySelector('.featured-grid');
   
   if (!grid) {
