@@ -5,12 +5,12 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
-// Only call app.listen if we are NOT on Vercel
+// Only listen locally, Vercel will manage the execution in production
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
         console.log(`Server running on http://localhost:${PORT}`);
     });
 }
 
-// Critical for Vercel
+// THIS IS CRITICAL: Vercel needs the default export
 export default app;
