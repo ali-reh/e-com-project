@@ -1,96 +1,176 @@
+/**
+ * Featured Products Script
+ * Fetches and displays featured products from the API
+ */
+
 document.addEventListener('DOMContentLoaded', async () => {
   const grid = document.querySelector('.featured-grid');
   
   if (!grid) {
-    console.error('Could not find .featured-grid in the HTML.');
+    console.error('Featured grid element not found in HTML');
     return;
   }
 
+  /**
+   * Format price as currency
+   */
   const formatMoney = (value) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
     }).format(value || 0);
   };
 
-  const getProductImage = (product) => {
-    // Check if product_images exists and is an array
-    if (!product.product_images || !Array.isArray(product.product_images) || product.product_images.length === 0) {
+  /**
+   * Get primary image from product_images array
+   */
+  const getPrimaryImage = (productImages) => {
+    if (!productImages || !Array.isArray(productImages) || productImages.length === 0) {
       return 'https://via.placeholder.com/400x400?text=No+Image';
     }
-    const primary = product.product_images.find(img => img.is_primary);
-    return primary ? primary.image_url : product.product_images[0].image_url;
+    
+    const primary = productImages.find(img => img.is_primary);
+    return primary ? primary.image_url : productImages[0].image_url;
   };
 
+  /**
+   * Get category names from categories array (many-to-many)
+   */
+  const getCategoryNames = (categories) => {
+    if (!categories || !Array.isArray(categories) || categories.length === 0) {
+      return 'Uncategorized';
+    }
+    
+    // Join multiple categories with bullet separator
+    return categories.map(cat => cat.name).join(' • ');
+  };
+
+  /**
+   * Render featured products to the grid
+   */
   const renderFeaturedProducts = (products) => {
     if (!products || products.length === 0) {
-      grid.innerHTML = '<p class="text-center w-100 text-secondary">No featured products found.</p>';
+      grid.innerHTML = `
+        <div class="col-12 text-center py-5">
+          <p class="text-secondary mb-0">No featured products available at this time.</p>
+        </div>
+      `;
       return;
     }
 
     grid.innerHTML = products
       .map((product) => {
-        const imageUrl = getProductImage(product);
-        const categoryName = product.categories?.name || 'Collection';
+        const imageUrl = getPrimaryImage(product.product_images);
+        const categoryNames = getCategoryNames(product.categories);
+        const price = formatMoney(product.price);
         
         return `
-          <article class="product-card" id="product-${product.id}">
+          <article class="product-card" data-product-id="${product.id}">
             <div class="media-wrap">
-              <img src="${imageUrl}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/400x400?text=Error+Loading+Image'">
-              <a class="add-cart" href="#" data-id="${product.id}">
+              <img 
+                src="${imageUrl}" 
+                alt="${product.name}"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Image+Error'"
+              >
+              <a class="add-cart" href="#" data-product-id="${product.id}" title="Add to cart">
                 <i class="bi bi-plus"></i>
               </a>
-              <a class="product-view-btn" href="pages/product.html?id=${product.id}">
+              <a class="product-view-btn" href="pages/product.html?id=${product.id}" title="View details">
                 <i class="bi bi-eye-fill"></i>
               </a>
             </div>
             <div class="product-body">
               <h3 class="product-title">${product.name}</h3>
-              <div class="product-meta">${categoryName}</div>
+              <div class="product-meta">${categoryNames}</div>
               <div class="price-row">
-                <span class="price">${formatMoney(product.price)}</span>
+                <span class="price">${price}</span>
               </div>
             </div>
           </article>
         `;
       })
       .join('');
+
+    // Add click event listeners for "Add to Cart" buttons
+    attachCartListeners();
   };
 
-  const loadFeatured = async () => {
+  /**
+   * Attach event listeners to add-to-cart buttons
+   */
+  const attachCartListeners = () => {
+    const addCartButtons = document.querySelectorAll('.add-cart');
+    
+    addCartButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const productId = button.dataset.productId;
+        handleAddToCart(productId);
+      });
+    });
+  };
+
+  /**
+   * Handle add to cart action
+   */
+  const handleAddToCart = (productId) => {
+    // TODO: Implement your cart logic here
+    console.log('Add to cart:', productId);
+    
+    // Example: Show a toast notification
+    alert('Product added to cart!');
+    
+    // Example: Update cart in localStorage
+    // const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    // cart.push(productId);
+    // localStorage.setItem('cart', JSON.stringify(cart));
+  };
+
+  /**
+   * Load featured products from API
+   */
+  const loadFeaturedProducts = async () => {
     try {
-      // 1. Fetch from the specific featured endpoint you defined in routes
+      // Fetch featured products
       const response = await fetch('/api/products/featured');
       
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Server Error (${response.status}): ${errorText}`);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
       const result = await response.json();
       
-      // 2. CRITICAL: Your controller uses successResponse(res, products, ...), 
-      // which usually returns { success: true, data: [...], message: "..." }
+      // Handle response from successResponse wrapper
+      // Response format: { success: true, data: [...], message: "..." }
       const products = result.data || result;
 
       if (!Array.isArray(products)) {
-        console.error('API did not return an array. Received:', result);
-        throw new Error('Invalid data format received from server.');
+        console.error('Invalid response format:', result);
+        throw new Error('Server returned invalid data format');
       }
-      
+
+      console.log(`Loaded ${products.length} featured products`);
       renderFeaturedProducts(products);
 
     } catch (error) {
-      // This will show you the real problem in the Browser Console
-      console.error('Detailed Load Error:', error);
+      console.error('Error loading featured products:', error);
+      
       grid.innerHTML = `
-        <div class="text-center w-100">
-          <p class="text-danger">Unable to load featured items.</p>
-          <small class="text-secondary">Check console for details: ${error.message}</small>
+        <div class="col-12 text-center py-5">
+          <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+          <p class="text-danger mt-3 mb-2">Unable to load featured products</p>
+          <small class="text-secondary">${error.message}</small>
+          <br>
+          <button class="btn btn-sm btn-outline-primary mt-3" onclick="location.reload()">
+            <i class="bi bi-arrow-clockwise"></i> Try Again
+          </button>
         </div>
       `;
     }
   };
 
-  loadFeatured();
+  // Initialize: Load featured products
+  loadFeaturedProducts();
 });

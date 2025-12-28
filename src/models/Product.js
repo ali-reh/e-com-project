@@ -1,19 +1,28 @@
 import supabase from '../config/supabase.js';
 
 class Product {
-  // Get product by ID
+  // Get product by ID with all categories
   static async getById(productId) {
     const { data, error } = await supabase
       .from('products')
       .select(`
         *,
-        categories(*),
+        product_categories(
+          categories(*)
+        ),
         product_images(*)
       `)
       .eq('id', productId)
       .single();
 
     if (error) throw error;
+    
+    // Transform the data structure
+    if (data) {
+      data.categories = data.product_categories?.map(pc => pc.categories).filter(Boolean) || [];
+      delete data.product_categories;
+    }
+    
     return data;
   }
 
@@ -23,12 +32,15 @@ class Product {
       .from('products')
       .select(`
         *,
-        categories(*),
+        product_categories(
+          categories(*)
+        ),
         product_images(*)
       `);
 
+    // Filter by category
     if (filters.categoryId) {
-      query = query.eq('category_id', filters.categoryId);
+      query = query.eq('product_categories.category_id', filters.categoryId);
     }
 
     if (filters.minPrice || filters.maxPrice) {
@@ -45,7 +57,13 @@ class Product {
       .range(offset, offset + limit - 1);
 
     if (error) throw error;
-    return data;
+    
+    // Transform the data structure
+    return data.map(product => ({
+      ...product,
+      categories: product.product_categories?.map(pc => pc.categories).filter(Boolean) || [],
+      product_categories: undefined
+    }));
   }
 
   // Create new product
@@ -88,7 +106,9 @@ class Product {
       .from('products')
       .select(`
         *,
-        categories(*),
+        product_categories(
+          categories(*)
+        ),
         product_images(*)
       `)
       .eq('is_featured', true)
@@ -96,7 +116,61 @@ class Product {
       .limit(limit);
 
     if (error) throw error;
-    return data;
+    
+    // Transform the data structure
+    return data.map(product => ({
+      ...product,
+      categories: product.product_categories?.map(pc => pc.categories).filter(Boolean) || [],
+      product_categories: undefined
+    }));
+  }
+
+  // Add category to product
+  static async addCategory(productId, categoryId) {
+    const { data, error } = await supabase
+      .from('product_categories')
+      .insert([{ product_id: productId, category_id: categoryId }])
+      .select();
+
+    if (error) throw error;
+    return data[0];
+  }
+
+  // Remove category from product
+  static async removeCategory(productId, categoryId) {
+    const { error } = await supabase
+      .from('product_categories')
+      .delete()
+      .eq('product_id', productId)
+      .eq('category_id', categoryId);
+
+    if (error) throw error;
+    return true;
+  }
+
+  // Set all categories for a product (replace existing)
+  static async setCategories(productId, categoryIds) {
+    // Remove existing categories
+    await supabase
+      .from('product_categories')
+      .delete()
+      .eq('product_id', productId);
+
+    // Add new categories
+    if (categoryIds && categoryIds.length > 0) {
+      const { error } = await supabase
+        .from('product_categories')
+        .insert(
+          categoryIds.map(categoryId => ({
+            product_id: productId,
+            category_id: categoryId
+          }))
+        );
+
+      if (error) throw error;
+    }
+
+    return true;
   }
 }
 
