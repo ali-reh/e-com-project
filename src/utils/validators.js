@@ -10,7 +10,7 @@ export const isValidPassword = (password) => {
   return passwordRegex.test(password);
 };
 
-// Product validation
+// Product validation (removed category_id since using many-to-many)
 export const validateProduct = (product) => {
   const errors = {};
 
@@ -26,8 +26,9 @@ export const validateProduct = (product) => {
     errors.description = 'Product description is required';
   }
 
-  if (!product.category_id) {
-    errors.category_id = 'Category is required';
+  // Optional: Validate categories array if provided
+  if (product.categories && !Array.isArray(product.categories)) {
+    errors.categories = 'Categories must be an array';
   }
 
   return errors;
@@ -63,5 +64,3 @@ export const validateOrder = (order) => {
 
   return errors;
 };
-
-

@@ -1,2 +1,3 @@
-1. Shop page
-2. products and categories many to many
+1. Shop page and render products in shop page with filtering.
+3. categories left sidebar states categories dynamically
+4. admin pannel 
