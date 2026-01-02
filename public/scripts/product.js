@@ -135,15 +135,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (productDescription) {
       productDescription.textContent = product.description || 'No description available.';
     }
-
-    // Update categories in breadcrumb (optional)
-    if (product.categories && product.categories.length > 0) {
-      const categoryNames = product.categories.map(cat => cat.name).join(', ');
-      const shopLink = document.querySelector('.breadcrumb-nav a[href="#shop"]');
-      if (shopLink) {
-        shopLink.textContent = categoryNames;
-      }
-    }
   };
 
   /**
