@@ -42,7 +42,7 @@
 --   updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 -- );
 
--- -- Sizes Table (XXS to XXL)
+-- -- Sizes Table (XXS to XXL + A for One Size Fits All)
 -- CREATE TABLE sizes (
 --   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 --   name VARCHAR(10) UNIQUE NOT NULL,
@@ -209,11 +209,11 @@
 -- CREATE POLICY "Allow all operations on guest_carts" ON guest_carts FOR ALL USING (true) WITH CHECK (true);
 
 -- -- =====================================================
--- -- 7. INSERT STANDARD SIZES
+-- -- 7. INSERT STANDARD SIZES (A = One Size Fits All)
 -- -- =====================================================
 
 -- INSERT INTO sizes (name, display_order) VALUES
---   ('XXS', 1), ('XS', 2), ('S', 3), ('M', 4), ('L', 5), ('XL', 6), ('XXL', 7);
+--   ('A', 0), ('XXS', 1), ('XS', 2), ('S', 3), ('M', 4), ('L', 5), ('XL', 6), ('XXL', 7);
 
 -- -- =====================================================
 -- -- 8. INSERT CATEGORIES
@@ -319,7 +319,7 @@
 -- INSERT INTO product_categories (product_id, category_id)
 -- SELECT p.id, c.id FROM products p, categories c WHERE p.slug = 'cotton-sundress' AND c.slug = 'womens-clothing';
 
--- -- Accessories (no sizes needed)
+-- -- Accessories (One Size Fits All)
 -- INSERT INTO product_categories (product_id, category_id)
 -- SELECT p.id, c.id FROM products p, categories c WHERE p.slug = 'leather-tote-bag' AND c.slug = 'accessories';
 -- INSERT INTO product_categories (product_id, category_id)
@@ -509,6 +509,68 @@
 -- SELECT p.id, s.id, 12
 -- FROM products p, sizes s 
 -- WHERE p.slug = 'track-pants' AND s.name IN ('S', 'M', 'L', 'XL');
+
+-- -- Accessories (One Size Fits All - denoted as 'A')
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 15
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'leather-tote-bag' AND s.name = 'A';
+
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 25
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'minimalist-watch' AND s.name = 'A';
+
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 20
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'wool-scarf' AND s.name = 'A';
+
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 30
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'leather-belt' AND s.name = 'A';
+
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 18
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'sunglasses' AND s.name = 'A';
+
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 22
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'canvas-backpack' AND s.name = 'A';
+
+-- -- Footwear (One Size Fits All - denoted as 'A' for general stock)
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 12
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'white-leather-sneakers' AND s.name = 'A';
+
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 10
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'chelsea-boots' AND s.name = 'A';
+
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 15
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'running-shoes' AND s.name = 'A';
+
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 25
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'canvas-slip-ons' AND s.name = 'A';
+
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 8
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'leather-loafers' AND s.name = 'A';
+
+-- INSERT INTO product_sizes (product_id, size_id, stock)
+-- SELECT p.id, s.id, 10
+-- FROM products p, sizes s 
+-- WHERE p.slug = 'hiking-boots' AND s.name = 'A';
 
 -- -- =====================================================
 -- -- 12. ADD PRODUCT IMAGES (Using Unsplash placeholders)
