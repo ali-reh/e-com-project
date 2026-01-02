@@ -1,0 +1,316 @@
+/* Add to Cart Modal Styles */
+
+.cart-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 1rem;
+}
+
+.cart-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.cart-modal {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(20px) scale(0.95);
+    transition: transform 0.3s ease;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+}
+
+.cart-modal-overlay.active .cart-modal {
+    transform: translateY(0) scale(1);
+}
+
+/* Modal Header */
+.cart-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-modal-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.cart-modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #f5f5f5;
+    color: #666;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.cart-modal-close:hover {
+    background: #e0e0e0;
+    color: #333;
+}
+
+/* Modal Body */
+.cart-modal-body {
+    padding: 1.5rem;
+}
+
+/* Product Preview in Modal */
+.cart-modal-product {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-modal-product img {
+    width: 100px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #f5f5f5;
+}
+
+.cart-modal-product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cart-modal-product-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #222;
+}
+
+.cart-modal-product-category {
+    font-size: 0.8rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.cart-modal-product-price {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Size Selection */
+.cart-modal-section {
+    margin-bottom: 1.5rem;
+}
+
+.cart-modal-section-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.size-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.size-option {
+    min-width: 48px;
+    height: 44px;
+    padding: 0 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.size-option:hover {
+    border-color: #999;
+}
+
+.size-option.active {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.size-option.out-of-stock {
+    opacity: 0.4;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.size-option.out-of-stock:hover {
+    border-color: #e0e0e0;
+}
+
+/* No sizes message */
+.no-sizes-message {
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* Quantity Selector in Modal */
+.cart-modal-quantity {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.cart-modal-qty-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.cart-modal-qty-btn:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+}
+
+.cart-modal-qty-input {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.cart-modal-qty-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Stock Info */
+.stock-info {
+    font-size: 0.85rem;
+    color: #888;
+    margin-left: auto;
+}
+
+.stock-info.low-stock {
+    color: #e67e22;
+}
+
+.stock-info.out-of-stock {
+    color: #e53935;
+}
+
+/* Modal Footer */
+.cart-modal-footer {
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 0.75rem;
+}
+
+.cart-modal-btn {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.cart-modal-btn-cancel {
+    background: #f5f5f5;
+    border: none;
+    color: #666;
+}
+
+.cart-modal-btn-cancel:hover {
+    background: #e8e8e8;
+}
+
+.cart-modal-btn-add {
+    background: var(--primary-color);
+    border: none;
+    color: #fff;
+}
+
+.cart-modal-btn-add:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.cart-modal-btn-add:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive */
+@media (max-width: 575.98px) {
+    .cart-modal {
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 85vh;
+    }
+
+    .cart-modal-overlay.active .cart-modal {
+        transform: translateY(0);
+    }
+
+    .cart-modal-product img {
+        width: 80px;
+        height: 100px;
+    }
+
+    .size-option {
+        min-width: 44px;
+        height: 40px;
+    }
+}

@@ -25,7 +25,7 @@ const CartService = {
   /**
    * Add item to cart (optimistic UI)
    */
-  async addToCart(productId, quantity = 1) {
+  async addToCart(productId, quantity = 1, size = null) {
     // Optimistic: Show success immediately
     this.showNotification('Added to cart!');
     
@@ -34,12 +34,19 @@ const CartService = {
     const currentCount = badge ? parseInt(badge.textContent) || 0 : 0;
     this.updateCartBadge(currentCount + quantity);
 
+    // Build request body
+    const body = { product_id: productId, quantity };
+    if (size && size.id) {
+      body.size_id = size.id;
+      body.size_name = size.name;
+    }
+
     // Send request in background
     try {
       const response = await fetch('/api/cart/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product_id: productId, quantity })
+        body: JSON.stringify(body)
       });
       const result = await response.json();
       if (result.success) {

@@ -3,6 +3,7 @@ import {
   getAllProducts,
   getProduct,
   getFeaturedProducts,
+  getProductSizes,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -20,6 +21,7 @@ const router = express.Router();
 router.get('/', getAllProducts);
 router.get('/featured', getFeaturedProducts);
 router.get('/:id', getProduct);
+router.get('/:id/sizes', getProductSizes);
 
 // Admin routes (add auth middleware when you have user authentication)
 router.post('/', createProduct);

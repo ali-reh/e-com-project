@@ -208,6 +208,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             <p></p>
           </div>
 
+          <!-- Size Selector -->
+          <div class="product-size-section" id="size-section" style="display: none;">
+            <p class="size-label">Select Size</p>
+            <div class="size-options" id="product-sizes"></div>
+          </div>
+
           <div class="product-actions">
             <div class="quantity-selector">
               <button class="qty-btn" id="decreaseQty">−</button>
@@ -249,6 +255,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderProductInfo(product);
       renderImageGallery(product.product_images);
 
+      // Fetch and render sizes
+      await loadProductSizes(product.id);
+
       // Attach event listeners after rendering
       attachProductListeners(product);
 
@@ -265,6 +274,84 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (typeof window.dataLoadComplete === 'function') {
         window.dataLoadComplete();
       }
+    }
+  };
+
+  // Store for selected size
+  let selectedSize = null;
+  let productSizes = [];
+
+  /**
+   * Load and render product sizes
+   */
+  const loadProductSizes = async (productId) => {
+    try {
+      const response = await fetch(`/api/products/${productId}/sizes`);
+      const result = await response.json();
+      
+      productSizes = result.success ? result.data : [];
+      
+      const sizeSection = document.getElementById('size-section');
+      const sizesContainer = document.getElementById('product-sizes');
+      
+      if (productSizes.length > 0) {
+        sizeSection.style.display = 'block';
+        
+        sizesContainer.innerHTML = productSizes.map(size => {
+          const inStock = size.stock > 0;
+          return `
+            <button class="size-btn ${!inStock ? 'out-of-stock' : ''}" 
+                    data-size-id="${size.size_id}"
+                    data-size-name="${size.name}"
+                    data-stock="${size.stock}"
+                    ${!inStock ? 'disabled' : ''}>
+              ${size.name}
+            </button>
+          `;
+        }).join('');
+        
+        // Attach size listeners
+        sizesContainer.querySelectorAll('.size-btn:not(.out-of-stock)').forEach(btn => {
+          btn.addEventListener('click', () => {
+            sizesContainer.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedSize = {
+              id: btn.dataset.sizeId,
+              name: btn.dataset.sizeName,
+              stock: parseInt(btn.dataset.stock)
+            };
+            updateAddToCartButton();
+          });
+        });
+        
+        // Update add to cart button state
+        updateAddToCartButton();
+      } else {
+        sizeSection.style.display = 'none';
+        selectedSize = 'one-size';
+      }
+    } catch (error) {
+      console.error('Error loading sizes:', error);
+      selectedSize = 'one-size';
+    }
+  };
+
+  /**
+   * Update add to cart button based on size selection
+   */
+  const updateAddToCartButton = () => {
+    const addBtn = document.querySelector('.btn-add-to-cart');
+    if (!addBtn) return;
+    
+    const hasSizes = productSizes.length > 0;
+    const hasSelectedSize = selectedSize !== null;
+    
+    if (hasSizes && !hasSelectedSize) {
+      addBtn.disabled = true;
+      addBtn.innerHTML = '<i class="bi bi-bag-plus"></i> Select a Size';
+    } else {
+      addBtn.disabled = false;
+      addBtn.innerHTML = '<i class="bi bi-bag-plus"></i> Add to Cart';
     }
   };
 
@@ -305,8 +392,18 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Handle add to cart action
    */
   const handleAddToCart = async (product, quantity) => {
+    // Check if size selection is required
+    const hasSizes = productSizes.length > 0;
+    if (hasSizes && !selectedSize) {
+      if (typeof CartService !== 'undefined') {
+        CartService.showNotification('Please select a size', 'error');
+      }
+      return;
+    }
+
     if (typeof CartService !== 'undefined') {
-      await CartService.addToCart(product.id, quantity);
+      const size = selectedSize !== 'one-size' ? selectedSize : null;
+      await CartService.addToCart(product.id, quantity, size);
     } else {
       console.error('CartService not available');
     }

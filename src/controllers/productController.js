@@ -53,6 +53,18 @@ export const getFeaturedProducts = async (req, res, next) => {
   }
 };
 
+// Get product sizes
+export const getProductSizes = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const sizes = await Product.getSizes(id);
+
+    successResponse(res, sizes, 'Product sizes retrieved successfully');
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+
 // Create product (admin)
 export const createProduct = async (req, res, next) => {
   try {

@@ -172,6 +172,67 @@ class Product {
 
     return true;
   }
+
+  // Get available sizes for a product
+  static async getSizes(productId) {
+    const { data, error } = await supabase
+      .from('product_sizes')
+      .select(`
+        id,
+        stock,
+        size_id,
+        sizes(id, name, display_order)
+      `)
+      .eq('product_id', productId)
+      .order('sizes(display_order)', { ascending: true });
+
+    if (error) throw error;
+
+    // Transform to flat structure
+    return (data || []).map(ps => ({
+      id: ps.id,
+      size_id: ps.size_id,
+      name: ps.sizes?.name,
+      display_order: ps.sizes?.display_order,
+      stock: ps.stock
+    })).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+  }
+
+  // Add size to product with stock
+  static async addSize(productId, sizeId, stock = 0) {
+    const { data, error } = await supabase
+      .from('product_sizes')
+      .insert([{ product_id: productId, size_id: sizeId, stock }])
+      .select();
+
+    if (error) throw error;
+    return data[0];
+  }
+
+  // Update size stock
+  static async updateSizeStock(productId, sizeId, stock) {
+    const { data, error } = await supabase
+      .from('product_sizes')
+      .update({ stock })
+      .eq('product_id', productId)
+      .eq('size_id', sizeId)
+      .select();
+
+    if (error) throw error;
+    return data[0];
+  }
+
+  // Remove size from product
+  static async removeSize(productId, sizeId) {
+    const { error } = await supabase
+      .from('product_sizes')
+      .delete()
+      .eq('product_id', productId)
+      .eq('size_id', sizeId);
+
+    if (error) throw error;
+    return true;
+  }
 }
 
 export default Product;

@@ -303,13 +303,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   /**
-   * Handle add to cart action
+   * Handle add to cart action - opens modal
    */
-  const handleAddToCart = async (productId) => {
-    if (typeof CartService !== 'undefined') {
-      await CartService.addToCart(productId, 1);
+  const handleAddToCart = (productId) => {
+    if (typeof CartModal !== 'undefined') {
+      CartModal.open(productId);
+    } else if (typeof CartService !== 'undefined') {
+      // Fallback if modal not available
+      CartService.addToCart(productId, 1);
     } else {
-      console.error('CartService not available');
+      console.error('CartModal/CartService not available');
     }
   };
 
