@@ -7,6 +7,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Store all products for filtering
   let allProducts = [];
   let allCategories = [];
+  let filteredProducts = [];
+  
+  // Pagination state
+  const PRODUCTS_PER_PAGE = 12;
+  let currentPage = 1;
   
   // Filter state
   let filters = {
@@ -91,6 +96,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
           <div class="products-grid" id="products-grid">
             <!-- Products will be loaded here -->
+          </div>
+          <div class="pagination-container" id="pagination-container">
+            <!-- Pagination will be loaded here -->
           </div>
         </div>
       </div>
@@ -193,15 +201,116 @@ document.addEventListener('DOMContentLoaded', async () => {
         break;
     }
     
-    renderProducts(filtered);
+    // Store filtered products and reset to page 1
+    filteredProducts = filtered;
+    currentPage = 1;
+    renderCurrentPage();
+  };
+
+  /**
+   * Render current page of products
+   */
+  const renderCurrentPage = () => {
+    const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+    const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    const endIndex = Math.min(startIndex + PRODUCTS_PER_PAGE, filteredProducts.length);
+    const pageProducts = filteredProducts.slice(startIndex, endIndex);
+    
+    // Update results count to show range
+    const total = filteredProducts.length;
+    if (total > 0) {
+      resultsCount.textContent = `Showing ${startIndex + 1}–${endIndex} of ${total} products`;
+    } else {
+      resultsCount.textContent = '0 products';
+    }
+    
+    renderProducts(pageProducts);
+    renderPagination(totalPages);
+  };
+
+  /**
+   * Go to specific page
+   */
+  const goToPage = (page) => {
+    const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+    if (page < 1 || page > totalPages) return;
+    
+    currentPage = page;
+    renderCurrentPage();
+    
+    // Scroll to top of products grid
+    const grid = document.getElementById('products-grid');
+    if (grid) {
+      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  /**
+   * Render pagination controls
+   */
+  const renderPagination = (totalPages) => {
+    const container = document.getElementById('pagination-container');
+    
+    if (totalPages <= 1) {
+      container.innerHTML = '';
+      return;
+    }
+    
+    let html = '<div class="pagination">';
+    
+    // Previous button
+    html += `<button class="page-btn prev-btn" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">
+      <i class="bi bi-chevron-left"></i> Previous
+    </button>`;
+    
+    // Page numbers
+    html += '<div class="page-numbers">';
+    
+    // Always show first page
+    if (currentPage > 3) {
+      html += `<button class="page-btn" data-page="1">1</button>`;
+      if (currentPage > 4) {
+        html += `<span class="page-ellipsis">...</span>`;
+      }
+    }
+    
+    // Show pages around current page
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+      html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+    }
+    
+    // Always show last page
+    if (currentPage < totalPages - 2) {
+      if (currentPage < totalPages - 3) {
+        html += `<span class="page-ellipsis">...</span>`;
+      }
+      html += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
+    }
+    
+    html += '</div>';
+    
+    // Next button
+    html += `<button class="page-btn next-btn" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}">
+      Next <i class="bi bi-chevron-right"></i>
+    </button>`;
+    
+    html += '</div>';
+    
+    container.innerHTML = html;
+    
+    // Attach pagination listeners
+    container.querySelectorAll('.page-btn:not([disabled])').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const page = parseInt(btn.dataset.page);
+        goToPage(page);
+      });
+    });
   };
 
   /**
    * Render products to the grid
    */
   const renderProducts = (products) => {
-    resultsCount.textContent = `${products.length} product${products.length !== 1 ? 's' : ''}`;
-    
     if (!products || products.length === 0) {
       grid.innerHTML = `
         <div class="no-products">
@@ -411,7 +520,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         filters.category = categoryId;
       }
 
-      const response = await fetch('/api/products');
+      // Fetch all products (limit=1000 to get all)
+      const response = await fetch('/api/products?limit=1000');
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);

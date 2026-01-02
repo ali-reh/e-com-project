@@ -280,6 +280,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Store for selected size
   let selectedSize = null;
   let productSizes = [];
+  const MAX_QUANTITY = 10; // Maximum quantity cap
 
   /**
    * Load and render product sizes
@@ -320,6 +321,9 @@ document.addEventListener('DOMContentLoaded', async () => {
               name: btn.dataset.sizeName,
               stock: parseInt(btn.dataset.stock)
             };
+            // Reset quantity to 1 when size changes
+            const quantityInput = document.getElementById('quantity');
+            if (quantityInput) quantityInput.value = 1;
             updateAddToCartButton();
           });
         });
@@ -356,6 +360,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   /**
+   * Get the maximum allowed quantity based on stock and cap
+   */
+  const getMaxQuantity = () => {
+    if (selectedSize && selectedSize !== 'one-size' && selectedSize.stock) {
+      return Math.min(selectedSize.stock, MAX_QUANTITY);
+    }
+    return MAX_QUANTITY;
+  };
+
+  /**
    * Attach event listeners to product actions
    */
   const attachProductListeners = (product) => {
@@ -366,7 +380,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (increaseBtn) {
       increaseBtn.addEventListener('click', () => {
-        quantityInput.value = parseInt(quantityInput.value) + 1;
+        const currentQty = parseInt(quantityInput.value);
+        const maxQty = getMaxQuantity();
+        if (currentQty < maxQty) {
+          quantityInput.value = currentQty + 1;
+        }
       });
     }
 
