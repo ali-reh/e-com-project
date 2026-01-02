@@ -27,7 +27,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Search" aria-label="Search">
+                        <a href="#" class="nav-link active" id="search-btn" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Search" aria-label="Search">
                             <i class="bi bi-search"></i>
                         </a>
                     </li>
@@ -35,6 +35,29 @@
             </div>
         </nav>
     </header>
+
+    <!-- Search Modal -->
+    <div class="search-overlay" id="search-overlay"></div>
+    <div class="search-modal" id="search-modal">
+        <div class="search-modal-header">
+            <div class="search-input-wrap">
+                <i class="bi bi-search"></i>
+                <input type="text" id="search-modal-input" placeholder="Search products..." autocomplete="off">
+                <button class="search-clear-btn" id="search-clear-btn" aria-label="Clear search">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <button class="search-close-btn" id="search-close-btn" aria-label="Close search">
+                <span>ESC</span>
+            </button>
+        </div>
+        <div class="search-results" id="search-results">
+            <div class="search-placeholder">
+                <i class="bi bi-search"></i>
+                <p>Start typing to search products...</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Categories Sidebar -->
     <div class="categories-overlay" id="categories-overlay"></div>
