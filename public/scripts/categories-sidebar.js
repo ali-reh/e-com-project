@@ -90,13 +90,31 @@ function initCategoriesSidebar() {
             return;
         }
 
+        const isInPagesFolder = window.location.pathname.includes('/pages/');
+        const shopUrl = isInPagesFolder ? 'shop.html' : 'pages/shop.html';
+
+        // Add "View All" option first
+        const viewAllLi = document.createElement('li');
+        viewAllLi.className = 'category-item';
+        viewAllLi.style.animationDelay = '0.05s';
+        
+        const viewAllLink = document.createElement('a');
+        viewAllLink.href = shopUrl;
+        viewAllLink.className = 'category-link view-all';
+        viewAllLink.innerHTML = `
+            <span>View All Products</span>
+            <i class="bi bi-grid"></i>
+        `;
+        viewAllLi.appendChild(viewAllLink);
+        categoriesList.appendChild(viewAllLi);
+
         categories.forEach((category, index) => {
             const li = document.createElement('li');
             li.className = 'category-item';
-            li.style.animationDelay = `${0.05 * (index + 1)}s`;
+            li.style.animationDelay = `${0.05 * (index + 2)}s`;
 
             const link = document.createElement('a');
-            link.href = `pages/shop.html?category=${category.id}`;
+            link.href = `${shopUrl}?category=${category.id}`;
             link.className = 'category-link';
             link.innerHTML = `
                 <span>${category.name}</span>

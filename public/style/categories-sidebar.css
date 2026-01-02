@@ -138,6 +138,26 @@
     transform: translateX(0);
 }
 
+/* View All Link */
+.category-link.view-all {
+    background-color: var(--primary-color);
+    color: #fff;
+    font-weight: 500;
+    border-bottom: none;
+    margin-bottom: 10px;
+}
+
+.category-link.view-all:hover {
+    background-color: #1e6b47;
+    color: #fff;
+    padding-left: 30px;
+}
+
+.category-link.view-all i {
+    opacity: 1;
+    transform: translateX(0);
+}
+
 /* Empty State */
 .categories-empty {
     text-align: center;

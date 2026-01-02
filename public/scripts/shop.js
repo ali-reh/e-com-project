@@ -418,6 +418,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       console.log(`Loaded ${allProducts.length} products`);
+      
+      // Re-render category filters to show active state from URL
+      renderCategoryFilters();
       applyFilters();
 
       // Signal that data loading is complete
