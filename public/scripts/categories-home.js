@@ -1,6 +1,6 @@
 /**
  * Categories Slider for Home Page
- * Fetches categories and displays them in a scrollable slider
+ * Fetches categories and displays them in an auto-scrolling slider
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -9,8 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function initCategoriesSlider() {
     const slider = document.getElementById('categories-slider');
-    const prevBtn = document.getElementById('cat-prev');
-    const nextBtn = document.getElementById('cat-next');
+    const wrapper = slider?.parentElement;
 
     if (!slider) return;
 
@@ -34,8 +33,11 @@ async function initCategoriesSlider() {
         // Render categories
         renderCategories(slider, categoriesWithCounts);
 
-        // Setup slider navigation
-        setupSliderNav(slider, prevBtn, nextBtn);
+        // Setup auto-scroll
+        setupAutoScroll(slider, wrapper);
+
+        // Setup drag to scroll
+        setupDragScroll(slider);
 
     } catch (error) {
         console.error('Error loading categories:', error);
@@ -128,37 +130,104 @@ function renderCategories(slider, categories) {
 }
 
 /**
- * Setup slider navigation
+ * Setup auto-scroll functionality
  */
-function setupSliderNav(slider, prevBtn, nextBtn) {
-    if (!prevBtn || !nextBtn) return;
+function setupAutoScroll(slider, wrapper) {
+    const scrollSpeed = 1; // pixels per frame
+    const pauseOnHover = true;
+    let direction = 1; // 1 = forward, -1 = backward
+    let isPaused = false;
+    let animationId = null;
 
-    const scrollAmount = 240; // Card width + gap
-
-    // Update button states
-    function updateButtons() {
-        const isAtStart = slider.scrollLeft <= 0;
-        const isAtEnd = slider.scrollLeft >= slider.scrollWidth - slider.clientWidth - 10;
-
-        prevBtn.disabled = isAtStart;
-        nextBtn.disabled = isAtEnd;
+    // Update scroll indicator classes
+    function updateScrollIndicators() {
+        if (!wrapper) return;
+        
+        const isAtStart = slider.scrollLeft <= 5;
+        const isAtEnd = slider.scrollLeft >= slider.scrollWidth - slider.clientWidth - 5;
+        
+        wrapper.classList.toggle('can-scroll-left', !isAtStart);
+        wrapper.classList.toggle('can-scroll-right', !isAtEnd);
     }
 
-    // Initial state
-    updateButtons();
+    // Animation loop
+    function animate() {
+        if (!isPaused) {
+            const maxScroll = slider.scrollWidth - slider.clientWidth;
+            
+            // Check boundaries and reverse direction
+            if (slider.scrollLeft >= maxScroll - 1) {
+                direction = -1;
+            } else if (slider.scrollLeft <= 0) {
+                direction = 1;
+            }
+            
+            slider.scrollLeft += scrollSpeed * direction;
+            updateScrollIndicators();
+        }
+        
+        animationId = requestAnimationFrame(animate);
+    }
 
-    // Scroll on button click
-    prevBtn.addEventListener('click', () => {
-        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    // Start animation
+    animationId = requestAnimationFrame(animate);
+
+    // Pause on hover/touch
+    if (pauseOnHover) {
+        slider.addEventListener('mouseenter', () => { isPaused = true; });
+        slider.addEventListener('mouseleave', () => { isPaused = false; });
+        slider.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
+        slider.addEventListener('touchend', () => { 
+            setTimeout(() => { isPaused = false; }, 2000); // Resume after 2s
+        });
+    }
+
+    // Update indicators on manual scroll
+    slider.addEventListener('scroll', updateScrollIndicators);
+    
+    // Initial indicator state
+    updateScrollIndicators();
+
+    // Cleanup on page hide
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && animationId) {
+            cancelAnimationFrame(animationId);
+        } else if (!document.hidden) {
+            animationId = requestAnimationFrame(animate);
+        }
+    });
+}
+
+/**
+ * Setup drag-to-scroll functionality
+ */
+function setupDragScroll(slider) {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        slider.style.scrollBehavior = 'auto';
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
     });
 
-    nextBtn.addEventListener('click', () => {
-        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        slider.style.scrollBehavior = 'smooth';
     });
 
-    // Update buttons on scroll
-    slider.addEventListener('scroll', updateButtons);
+    slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.style.scrollBehavior = 'smooth';
+    });
 
-    // Update on resize
-    window.addEventListener('resize', updateButtons);
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        slider.scrollLeft = scrollLeft - walk;
+    });
 }
