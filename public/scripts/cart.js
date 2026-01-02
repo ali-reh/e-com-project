@@ -23,9 +23,18 @@ const CartService = {
   },
 
   /**
-   * Add item to cart
+   * Add item to cart (optimistic UI)
    */
   async addToCart(productId, quantity = 1) {
+    // Optimistic: Show success immediately
+    this.showNotification('Added to cart!');
+    
+    // Optimistic: Increment badge immediately
+    const badge = document.getElementById('cart-badge');
+    const currentCount = badge ? parseInt(badge.textContent) || 0 : 0;
+    this.updateCartBadge(currentCount + quantity);
+
+    // Send request in background
     try {
       const response = await fetch('/api/cart/add', {
         method: 'POST',
@@ -34,13 +43,15 @@ const CartService = {
       });
       const result = await response.json();
       if (result.success) {
+        // Sync with actual server count
         this.updateCartBadge(result.data.itemCount);
-        this.showNotification('Added to cart!');
         return result.data;
       }
       throw new Error(result.message || 'Failed to add to cart');
     } catch (error) {
       console.error('Error adding to cart:', error);
+      // Revert badge on failure
+      this.updateCartBadge(currentCount);
       this.showNotification('Failed to add to cart', 'error');
       return null;
     }

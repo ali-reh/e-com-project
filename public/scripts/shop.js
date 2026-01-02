@@ -225,18 +225,21 @@ document.addEventListener('DOMContentLoaded', async () => {
               <img 
                 src="${imageUrl}" 
                 alt="${product.name}"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Image+Error'"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x500?text=Image+Error'"
               >
-              <a class="add-cart" href="#" data-product-id="${product.id}" title="Add to cart">
-                <i class="bi bi-plus"></i>
-              </a>
-              <a class="product-view-btn" href="product.html?id=${product.id}" title="View details">
-                <i class="bi bi-eye-fill"></i>
-              </a>
+              <div class="quick-actions">
+                <a class="quick-action-btn" href="product.html?id=${product.id}" title="View details">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <button class="quick-action-btn add-to-cart-btn" data-product-id="${product.id}" title="Add to cart">
+                  <i class="bi bi-bag-plus"></i>
+                </button>
+              </div>
             </div>
             <div class="product-body">
+              <p class="product-meta">${categoryNames}</p>
               <h3 class="product-title">${product.name}</h3>
-              <div class="product-meta">${categoryNames}</div>
               <div class="price-row">
                 <span class="price">${price}</span>
               </div>
@@ -287,11 +290,12 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Attach event listeners to add-to-cart buttons
    */
   const attachCartListeners = () => {
-    const addCartButtons = document.querySelectorAll('.add-cart');
+    const addCartButtons = document.querySelectorAll('.add-to-cart-btn');
     
     addCartButtons.forEach(button => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const productId = button.dataset.productId;
         handleAddToCart(productId);
       });
