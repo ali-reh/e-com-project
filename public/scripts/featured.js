@@ -115,17 +115,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   /**
    * Handle add to cart action
    */
-  const handleAddToCart = (productId) => {
-    // TODO: Implement your cart logic here
-    console.log('Add to cart:', productId);
-    
-    // Example: Show a toast notification
-    alert('Product added to cart!');
-    
-    // Example: Update cart in localStorage
-    // const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    // cart.push(productId);
-    // localStorage.setItem('cart', JSON.stringify(cart));
+  const handleAddToCart = async (productId) => {
+    if (typeof CartService !== 'undefined') {
+      await CartService.addToCart(productId, 1);
+    } else {
+      console.error('CartService not available');
+    }
   };
 
   /**

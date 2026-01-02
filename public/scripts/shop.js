@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', async () => {
               <span class="price-separator">—</span>
               <input type="number" id="max-price" placeholder="Max" class="price-input">
             </div>
-            <button class="apply-price-btn" id="apply-price">Apply</button>
           </div>
           
           <!-- Sort -->
@@ -302,9 +301,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   /**
    * Handle add to cart action
    */
-  const handleAddToCart = (productId) => {
-    console.log('Add to cart:', productId);
-    alert('Product added to cart!');
+  const handleAddToCart = async (productId) => {
+    if (typeof CartService !== 'undefined') {
+      await CartService.addToCart(productId, 1);
+    } else {
+      console.error('CartService not available');
+    }
   };
 
   /**
@@ -322,14 +324,24 @@ document.addEventListener('DOMContentLoaded', async () => {
       }, 300);
     });
     
-    // Price apply
-    document.getElementById('apply-price').addEventListener('click', () => {
-      const min = document.getElementById('min-price').value;
-      const max = document.getElementById('max-price').value;
-      filters.minPrice = min ? parseFloat(min) : null;
-      filters.maxPrice = max ? parseFloat(max) : null;
-      applyFilters();
-    });
+    // Price inputs - auto apply with debounce
+    const minPriceInput = document.getElementById('min-price');
+    const maxPriceInput = document.getElementById('max-price');
+    let priceTimeout;
+    
+    const handlePriceChange = () => {
+      clearTimeout(priceTimeout);
+      priceTimeout = setTimeout(() => {
+        const min = minPriceInput.value;
+        const max = maxPriceInput.value;
+        filters.minPrice = min ? parseFloat(min) : null;
+        filters.maxPrice = max ? parseFloat(max) : null;
+        applyFilters();
+      }, 500);
+    };
+    
+    minPriceInput.addEventListener('input', handlePriceChange);
+    maxPriceInput.addEventListener('input', handlePriceChange);
     
     // Sort
     document.getElementById('sort-select').addEventListener('change', (e) => {

@@ -304,33 +304,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   /**
    * Handle add to cart action
    */
-  const handleAddToCart = (product, quantity) => {
-    // TODO: Implement your cart logic here
-    console.log('Add to cart:', {
-      productId: product.id,
-      productName: product.name,
-      price: product.price,
-      quantity: quantity
-    });
-
-    // Example: Show alert
-    alert(`Added ${quantity} × ${product.name} to cart!`);
-
-    // Example: Save to localStorage
-    // const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    // const existingItem = cart.find(item => item.productId === product.id);
-    // if (existingItem) {
-    //   existingItem.quantity += quantity;
-    // } else {
-    //   cart.push({
-    //     productId: product.id,
-    //     productName: product.name,
-    //     price: product.price,
-    //     quantity: quantity,
-    //     image: product.product_images?.[0]?.image_url
-    //   });
-    // }
-    // localStorage.setItem('cart', JSON.stringify(cart));
+  const handleAddToCart = async (product, quantity) => {
+    if (typeof CartService !== 'undefined') {
+      await CartService.addToCart(product.id, quantity);
+    } else {
+      console.error('CartService not available');
+    }
   };
 
   // Initialize: Get product ID and load product
