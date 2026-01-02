@@ -44,18 +44,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const result = await response.json();
 
       if (response.ok && result.success) {
-        // Success - update button immediately
-        submitBtn.disabled = false;
+        // Success - update button and keep it locked
         submitBtn.classList.add('success');
         submitBtn.innerHTML = '<span>Message Sent!</span><i class="bi bi-check-lg"></i>';
-        showNotification('Your message has been sent successfully!', 'success');
+        submitBtn.disabled = true;
+        showNotification('Your message has been sent successfully! Refresh the page to send another message.', 'success');
         
-        // Reset form after delay
-        setTimeout(() => {
-          form.reset();
-          submitBtn.classList.remove('success');
-          submitBtn.innerHTML = originalBtnContent;
-        }, 3000);
+        // Reset form but keep button locked
+        form.reset();
       } else {
         throw new Error(result.error || result.message || 'Failed to send message');
       }
