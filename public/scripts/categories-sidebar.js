@@ -62,11 +62,8 @@ function initCategoriesSidebar() {
 
     async function loadCategories() {
         const categoriesList = document.getElementById('categories-list');
-        const loadingSpinner = document.getElementById('categories-loading');
         
         try {
-            showLoading();
-            
             const response = await fetch('/api/categories');
             const result = await response.json();
 
@@ -79,8 +76,6 @@ function initCategoriesSidebar() {
         } catch (error) {
             console.error('Error loading categories:', error);
             showErrorState();
-        } finally {
-            hideLoading();
         }
     }
 
@@ -111,25 +106,6 @@ function initCategoriesSidebar() {
             li.appendChild(link);
             categoriesList.appendChild(li);
         });
-    }
-
-    function showLoading() {
-        const loadingSpinner = document.getElementById('categories-loading');
-        const categoriesList = document.getElementById('categories-list');
-        
-        if (loadingSpinner) {
-            loadingSpinner.classList.remove('hidden');
-        }
-        if (categoriesList) {
-            categoriesList.innerHTML = '';
-        }
-    }
-
-    function hideLoading() {
-        const loadingSpinner = document.getElementById('categories-loading');
-        if (loadingSpinner) {
-            loadingSpinner.classList.add('hidden');
-        }
     }
 
     function showEmptyState() {

@@ -138,18 +138,6 @@
     transform: translateX(0);
 }
 
-/* Loading Spinner */
-.categories-loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 0;
-}
-
-.categories-loading.hidden {
-    display: none;
-}
-
 /* Empty State */
 .categories-empty {
     text-align: center;

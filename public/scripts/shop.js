@@ -1,15 +1,37 @@
 /**
- * Featured Products Script
- * Fetches and displays featured products from the API
+ * Shop Page Script
+ * Fetches and displays all products from the API
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const grid = document.querySelector('.featured-grid');
+  // Create shop content container if not exists
+  const body = document.body;
+  const header = document.getElementById('header');
+  const footer = document.getElementById('footer');
   
-  if (!grid) {
-    console.error('Featured grid element not found in HTML');
-    return;
+  // Create main shop section
+  const shopSection = document.createElement('main');
+  shopSection.className = 'shop-section';
+  shopSection.innerHTML = `
+    <div class="container">
+      <div class="shop-header">
+        <h1 class="luxury-font">Shop All</h1>
+        <p class="shop-subtitle">Discover our complete collection</p>
+      </div>
+      <div class="products-grid" id="products-grid">
+        <!-- Products will be loaded here -->
+      </div>
+    </div>
+  `;
+  
+  // Insert after header
+  if (footer) {
+    body.insertBefore(shopSection, footer);
+  } else {
+    body.appendChild(shopSection);
   }
+
+  const grid = document.getElementById('products-grid');
 
   /**
    * Format price as currency
@@ -36,38 +58,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   /**
-   * Get category names from categories array (many-to-many)
+   * Get category names from categories array
    */
   const getCategoryNames = (categories) => {
     if (!categories || !Array.isArray(categories) || categories.length === 0) {
       return 'Uncategorized';
     }
-    
-    // Join multiple categories with bullet separator
     return categories.map(cat => cat.name).join(' • ');
   };
 
   /**
-   * Render featured products to the grid
+   * Render products to the grid
    */
-  const renderFeaturedProducts = (products) => {
+  const renderProducts = (products) => {
     if (!products || products.length === 0) {
       grid.innerHTML = `
         <div class="col-12 text-center py-5">
-          <p class="text-secondary mb-0">No featured products available at this time.</p>
+          <p class="text-secondary mb-0">No products available at this time.</p>
         </div>
       `;
       return;
     }
 
     grid.innerHTML = products
-      .map((product) => {
+      .map((product, index) => {
         const imageUrl = getPrimaryImage(product.product_images);
         const categoryNames = getCategoryNames(product.categories);
         const price = formatMoney(product.price);
         
         return `
-          <article class="product-card" data-product-id="${product.id}">
+          <article class="product-card fade-in-item" style="animation-delay: ${0.05 * index}s" data-product-id="${product.id}">
             <div class="media-wrap">
               <img 
                 src="${imageUrl}" 
@@ -77,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               <a class="add-cart" href="#" data-product-id="${product.id}" title="Add to cart">
                 <i class="bi bi-plus"></i>
               </a>
-              <a class="product-view-btn" href="pages/product.html?id=${product.id}" title="View details">
+              <a class="product-view-btn" href="product.html?id=${product.id}" title="View details">
                 <i class="bi bi-eye-fill"></i>
               </a>
             </div>
@@ -116,43 +136,39 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Handle add to cart action
    */
   const handleAddToCart = (productId) => {
-    // TODO: Implement your cart logic here
     console.log('Add to cart:', productId);
-    
-    // Example: Show a toast notification
     alert('Product added to cart!');
-    
-    // Example: Update cart in localStorage
-    // const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    // cart.push(productId);
-    // localStorage.setItem('cart', JSON.stringify(cart));
   };
 
   /**
-   * Load featured products from API
+   * Load products from API
    */
-  const loadFeaturedProducts = async () => {
+  const loadProducts = async () => {
     try {
-      // Fetch featured products
-      const response = await fetch('/api/products/featured');
+      // Check for category filter in URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const categoryId = urlParams.get('category');
+      
+      let url = '/api/products';
+      if (categoryId) {
+        url += `?category=${categoryId}`;
+      }
+
+      const response = await fetch(url);
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
       const result = await response.json();
-      
-      // Handle response from successResponse wrapper
-      // Response format: { success: true, data: [...], message: "..." }
       const products = result.data || result;
 
       if (!Array.isArray(products)) {
-        console.error('Invalid response format:', result);
         throw new Error('Server returned invalid data format');
       }
 
-      console.log(`Loaded ${products.length} featured products`);
-      renderFeaturedProducts(products);
+      console.log(`Loaded ${products.length} products`);
+      renderProducts(products);
 
       // Signal that data loading is complete
       if (typeof window.dataLoadComplete === 'function') {
@@ -160,7 +176,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
     } catch (error) {
-      console.error('Error loading featured products:', error);
+      console.error('Error loading products:', error);
       
       // Signal data loading complete even on error
       if (typeof window.dataLoadComplete === 'function') {
@@ -170,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       grid.innerHTML = `
         <div class="col-12 text-center py-5">
           <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
-          <p class="text-danger mt-3 mb-2">Unable to load featured products</p>
+          <p class="text-danger mt-3 mb-2">Unable to load products</p>
           <small class="text-secondary">${error.message}</small>
           <br>
           <button class="btn btn-sm btn-outline-primary mt-3" onclick="location.reload()">
@@ -181,6 +197,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  // Initialize: Load featured products
-  loadFeaturedProducts();
+  // Initialize: Load products
+  loadProducts();
 });

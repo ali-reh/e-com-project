@@ -138,23 +138,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   /**
-   * Show loading state
-   */
-  const showLoading = () => {
-    const productMain = document.querySelector('.product-main');
-    if (productMain) {
-      productMain.innerHTML = `
-        <div class="col-12 text-center py-5">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <p class="text-secondary mt-3">Loading product details...</p>
-        </div>
-      `;
-    }
-  };
-
-  /**
    * Show error state
    */
   const showError = (message) => {
@@ -179,8 +162,6 @@ document.addEventListener('DOMContentLoaded', async () => {
    */
   const loadProduct = async (productId) => {
     try {
-      showLoading();
-
       const response = await fetch(`/api/products/${productId}`);
       
       if (!response.ok) {
@@ -203,6 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Restore the product main HTML structure first
       const productMain = document.querySelector('.product-main');
+      productMain.classList.add('fade-in');
       productMain.innerHTML = `
         <!-- Image Gallery -->
         <div class="product-gallery">
@@ -270,9 +252,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Attach event listeners after rendering
       attachProductListeners(product);
 
+      // Signal that data loading is complete
+      if (typeof window.dataLoadComplete === 'function') {
+        window.dataLoadComplete();
+      }
+
     } catch (error) {
       console.error('Error loading product:', error);
       showError(error.message);
+      
+      // Signal data loading complete even on error
+      if (typeof window.dataLoadComplete === 'function') {
+        window.dataLoadComplete();
+      }
     }
   };
 

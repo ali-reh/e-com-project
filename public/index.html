@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Home </title>
+    <!-- Loading screen CSS (load first) -->
+    <link rel="stylesheet" href="style/loading-screen.css">
     <!-- Header (navbar + hero) combined CSS -->
     <link rel="stylesheet" href="style/header.css">
     <link rel="stylesheet" href="style/hero.css">
@@ -21,10 +23,26 @@
     <link rel="stylesheet" href="style/features.css">
     <link rel="stylesheet" href="style/footer.css">
     <link rel="stylesheet" href="style/categories-sidebar.css">
+    <!-- Loading screen script (load first) -->
+    <script src="scripts/loading-screen.js"></script>
+    <script>window.setWaitingForData(true);</script>
     <script src="scripts/featured.js"></script>
     <script src="scripts/categories-sidebar.js"></script>
 </head>
 <body>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-logo">BRAND</div>
+        <div class="loading-indicator">
+            <div class="loading-dots">
+                <span class="loading-dot"></span>
+                <span class="loading-dot"></span>
+                <span class="loading-dot"></span>
+            </div>
+            <div class="loading-line"></div>
+        </div>
+    </div>
 
     <div id="header"></div>
 
