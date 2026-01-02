@@ -23,6 +23,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.89.0",
     "body-parser": "^2.2.1",
+    "bootstrap-icons": "^1.13.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
