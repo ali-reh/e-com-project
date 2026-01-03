@@ -458,7 +458,9 @@ Reply to this customer: ${email}
             <td style="padding: 0 30px 30px 30px;">
               <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px;">Billing Address</h3>
               <p style="margin: 0; color: #666; line-height: 1.6;">
-                ${order.billing_address}
+                ${order.billing_details ? `${order.billing_details.firstName} ${order.billing_details.lastName}<br>` : ''}
+                ${order.billing_address}<br>
+                ${order.billing_details?.phone ? `📞 ${order.billing_details.phone}` : ''}
               </p>
             </td>
           </tr>
@@ -621,7 +623,11 @@ Reply to this customer: ${email}
             <td style="padding: 0 30px 25px 30px;">
               <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #eee; padding-bottom: 10px;">🧾 Billing Address</h3>
               <div style="background-color: #f8f9fa; padding: 15px 20px; border-radius: 8px; border-left: 4px solid #6c757d;">
-                <p style="margin: 0; color: #333; line-height: 1.7;">${order.billing_address}</p>
+                <p style="margin: 0; color: #333; line-height: 1.7;">
+                  ${order.billing_details ? `<strong>${order.billing_details.firstName} ${order.billing_details.lastName}</strong><br>` : ''}
+                  ${order.billing_address}<br>
+                  ${order.billing_details?.phone ? `📞 ${order.billing_details.phone}` : ''}
+                </p>
               </div>
             </td>
           </tr>

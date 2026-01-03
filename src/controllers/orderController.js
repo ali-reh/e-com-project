@@ -112,6 +112,8 @@ export const checkout = async (req, res, next) => {
       customer_phone,
       shipping_address,
       billing_address,
+      shipping_details,
+      billing_details,
       subtotal,
       shipping_cost,
       tax,
@@ -162,7 +164,9 @@ export const checkout = async (req, res, next) => {
     // Prepare order data for emails
     const orderWithItems = {
       ...order,
-      items: orderItems
+      items: orderItems,
+      billing_details: billing_details || null,
+      shipping_details: shipping_details || null
     };
 
     // Send emails (await both for Vercel serverless)
