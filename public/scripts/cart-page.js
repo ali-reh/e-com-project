@@ -109,10 +109,6 @@ function renderCartItems(container, cart) {
         </div>
     `).join('');
 
-    const shipping = 0; // Free shipping
-    const tax = cart.total * 0.1; // 10% tax example
-    const total = cart.total + shipping + tax;
-
     container.innerHTML = `
         <div class="cart-layout">
             <div class="cart-items">
@@ -124,17 +120,9 @@ function renderCartItems(container, cart) {
                     <span>Subtotal</span>
                     <span>${formatMoney(cart.total)}</span>
                 </div>
-                <div class="summary-row">
-                    <span>Shipping</span>
-                    <span>${shipping === 0 ? 'Free' : formatMoney(shipping)}</span>
-                </div>
-                <div class="summary-row">
-                    <span>Estimated Tax</span>
-                    <span>${formatMoney(tax)}</span>
-                </div>
                 <div class="summary-row total">
                     <span>Total</span>
-                    <span>${formatMoney(total)}</span>
+                    <span>${formatMoney(cart.total)}</span>
                 </div>
                 <button class="checkout-btn" id="checkout-btn">
                     <i class="bi bi-lock me-2"></i>Proceed to Checkout
@@ -234,8 +222,7 @@ function attachCartEventListeners() {
     const checkoutBtn = document.getElementById('checkout-btn');
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', () => {
-            // For now, just show a message. Checkout flow would be implemented later.
-            alert('Checkout functionality coming soon!');
+            window.location.href = 'checkout.html';
         });
     }
 }
@@ -278,15 +265,11 @@ function updateCartTotals() {
         itemCount += qty;
     });
 
-    const tax = subtotal * 0.1;
-    const total = subtotal + tax;
-
-    // Update summary
+    // Update summary (just subtotal and total now)
     const summaryRows = document.querySelectorAll('.summary-row');
-    if (summaryRows.length >= 4) {
+    if (summaryRows.length >= 2) {
         summaryRows[0].querySelector('span:last-child').textContent = formatMoney(subtotal);
-        summaryRows[2].querySelector('span:last-child').textContent = formatMoney(tax);
-        summaryRows[3].querySelector('span:last-child').textContent = formatMoney(total);
+        summaryRows[1].querySelector('span:last-child').textContent = formatMoney(subtotal);
     }
 
     // Update item count

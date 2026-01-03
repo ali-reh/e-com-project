@@ -5,7 +5,8 @@ import {
   getOrderByNumber,
   createOrder,
   updateOrderStatus,
-  deleteOrder
+  deleteOrder,
+  checkout
 } from '../controllers/orderController.js';
 
 const router = express.Router();
@@ -15,6 +16,7 @@ router.get('/', getAllOrders);
 router.get('/:id', getOrder);
 router.get('/number/:orderNumber', getOrderByNumber);
 router.post('/', createOrder);
+router.post('/checkout', checkout);
 
 // Order management routes
 router.put('/:id/status', updateOrderStatus);

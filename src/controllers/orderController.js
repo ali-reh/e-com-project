@@ -1,6 +1,7 @@
 import Order from '../models/Order.js';
 import { successResponse, errorResponse } from '../utils/responseHandler.js';
 import { validateOrder } from '../utils/validators.js';
+import EmailService from '../utils/emailService.js';
 
 // Get all orders
 export const getAllOrders = async (req, res, next) => {
@@ -99,5 +100,87 @@ export const deleteOrder = async (req, res, next) => {
     successResponse(res, null, 'Order deleted successfully');
   } catch (error) {
     errorResponse(res, error);
+  }
+};
+
+// Checkout - Create order from cart
+export const checkout = async (req, res, next) => {
+  try {
+    const {
+      customer_email,
+      customer_name,
+      customer_phone,
+      shipping_address,
+      billing_address,
+      subtotal,
+      shipping_cost,
+      tax,
+      total,
+      items,
+      payment_method
+    } = req.body;
+
+    // Validate required fields
+    if (!customer_email || !customer_name || !customer_phone || !shipping_address) {
+      return errorResponse(res, { message: 'Missing required customer information' }, 400);
+    }
+
+    if (!items || items.length === 0) {
+      return errorResponse(res, { message: 'No items in order' }, 400);
+    }
+
+    // Create order
+    const orderData = {
+      customer_name,
+      customer_email,
+      customer_phone,
+      shipping_address,
+      billing_address: billing_address || shipping_address,
+      subtotal: parseFloat(subtotal),
+      shipping_cost: parseFloat(shipping_cost),
+      tax: parseFloat(tax) || 0,
+      total: parseFloat(total),
+      payment_method: payment_method || 'cod',
+      status: 'pending'
+    };
+
+    const order = await Order.create(orderData);
+
+    // Add order items
+    const orderItems = items.map(item => ({
+      product_id: item.product_id,
+      product_name: item.product_name,
+      size_name: item.size_name || null,
+      quantity: item.quantity,
+      unit_price: parseFloat(item.unit_price),
+      subtotal: parseFloat(item.subtotal),
+      image_url: item.image_url || null
+    }));
+
+    await Order.addItems(order.id, orderItems);
+
+    // Prepare order data for emails
+    const orderWithItems = {
+      ...order,
+      items: orderItems
+    };
+
+    // Send emails (await both for Vercel serverless)
+    try {
+      await EmailService.sendOrderConfirmation(orderWithItems);
+    } catch (err) {
+      console.error('Failed to send order confirmation email:', err);
+    }
+
+    try {
+      await EmailService.sendOrderNotification(orderWithItems);
+    } catch (err) {
+      console.error('Failed to send order notification email:', err);
+    }
+
+    successResponse(res, order, 'Order placed successfully', 201);
+  } catch (error) {
+    console.error('Checkout error:', error);
+    errorResponse(res, { message: 'Failed to place order. Please try again.' }, 500);
   }
 };
