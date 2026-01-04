@@ -307,24 +307,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       const sizeSection = document.getElementById('size-section');
       const sizesContainer = document.getElementById('product-sizes');
       
-      if (productSizes.length > 0) {
+      // Filter to only show sizes with stock > 0
+      const availableSizes = productSizes.filter(size => size.stock > 0);
+      
+      if (availableSizes.length > 0) {
         sizeSection.style.display = 'block';
         
-        sizesContainer.innerHTML = productSizes.map(size => {
-          const inStock = size.stock > 0;
+        sizesContainer.innerHTML = availableSizes.map(size => {
           return `
-            <button class="size-btn ${!inStock ? 'out-of-stock' : ''}" 
+            <button class="size-btn" 
                     data-size-id="${size.size_id}"
                     data-size-name="${size.name}"
-                    data-stock="${size.stock}"
-                    ${!inStock ? 'disabled' : ''}>
+                    data-stock="${size.stock}">
               ${size.name}
             </button>
           `;
         }).join('');
         
         // Attach size listeners
-        sizesContainer.querySelectorAll('.size-btn:not(.out-of-stock)').forEach(btn => {
+        sizesContainer.querySelectorAll('.size-btn').forEach(btn => {
           btn.addEventListener('click', () => {
             sizesContainer.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
