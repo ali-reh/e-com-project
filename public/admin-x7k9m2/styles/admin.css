@@ -753,7 +753,7 @@ body {
   border-radius: 15px;
   width: 100%;
   max-width: 500px;
-  max-height: 90vh;
+  max-height: 85vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -761,6 +761,7 @@ body {
 
 .modal-content.modal-lg {
   max-width: 700px;
+  max-height: 90vh;
 }
 
 .modal-content.modal-sm {
@@ -773,6 +774,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .modal-header h3 {
@@ -795,6 +797,9 @@ body {
 .modal-body {
   padding: 20px;
   overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  max-height: calc(85vh - 140px);
 }
 
 .modal-footer {
@@ -803,6 +808,7 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 /* Form Elements */
@@ -1115,6 +1121,47 @@ body {
   .stats-grid {
     grid-template-columns: 1fr 1fr;
   }
+
+  /* Modal responsive */
+  .modal {
+    padding: 10px;
+  }
+
+  .modal-content {
+    max-height: 95vh;
+    border-radius: 12px;
+  }
+
+  .modal-content.modal-lg {
+    max-height: 95vh;
+  }
+
+  .modal-body {
+    max-height: calc(95vh - 130px);
+    padding: 15px;
+  }
+
+  .modal-header,
+  .modal-footer {
+    padding: 15px;
+  }
+
+  /* Table wrapper for horizontal scroll */
+  .card-body {
+    overflow-x: auto;
+  }
+
+  .data-table {
+    min-width: 600px;
+  }
+
+  .top-bar h1 {
+    font-size: 18px;
+  }
+
+  .content-section {
+    padding: 15px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1133,6 +1180,33 @@ body {
 
   .search-input {
     min-width: 100%;
+  }
+
+  .stat-card {
+    padding: 15px;
+  }
+
+  .stat-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+
+  .sizes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .checkbox-group {
+    flex-direction: column;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 5px;
   }
 }
 

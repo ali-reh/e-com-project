@@ -169,8 +169,9 @@ function switchSection(sectionName) {
   // Load section data
   loadSectionData(sectionName);
 
-  // Close mobile menu
+  // Close mobile menu and overlay
   document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
 }
 
 function loadSectionData(section) {
@@ -1193,6 +1194,13 @@ function initEventListeners() {
   // Mobile menu
   document.getElementById('mobileMenuBtn').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('mobile-open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+  });
+
+  // Sidebar overlay click to close
+  document.getElementById('sidebarOverlay').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('mobile-open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
   });
 
   // Refresh

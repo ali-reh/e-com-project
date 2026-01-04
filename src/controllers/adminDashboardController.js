@@ -259,7 +259,8 @@ export const getProducts = async (req, res) => {
       query = query.ilike('name', `%${search}%`);
     }
 
-    if (active !== undefined) {
+    // Only filter by active status if explicitly set to 'true' or 'false'
+    if (active === 'true' || active === 'false') {
       query = query.eq('is_active', active === 'true');
     }
 
