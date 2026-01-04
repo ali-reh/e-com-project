@@ -194,7 +194,10 @@ const CartModal = {
     const container = document.getElementById('cart-modal-sizes');
     const section = document.getElementById('cart-modal-size-section');
 
-    if (this.sizes.length === 0) {
+    // Filter to only show sizes with stock > 0
+    const availableSizes = this.sizes.filter(size => size.stock > 0);
+
+    if (availableSizes.length === 0) {
       // No sizes available - hide section or show message
       section.innerHTML = `
         <p class="cart-modal-section-title">Size</p>
@@ -204,21 +207,19 @@ const CartModal = {
       return;
     }
 
-    container.innerHTML = this.sizes.map(size => {
-      const inStock = size.stock > 0;
+    container.innerHTML = availableSizes.map(size => {
       return `
-        <button class="size-option ${!inStock ? 'out-of-stock' : ''}" 
+        <button class="size-option" 
                 data-size-id="${size.size_id}"
                 data-size-name="${size.name}"
-                data-stock="${size.stock}"
-                ${!inStock ? 'disabled' : ''}>
+                data-stock="${size.stock}">
           ${size.name}
         </button>
       `;
     }).join('');
 
     // Attach size selection listeners
-    container.querySelectorAll('.size-option:not(.out-of-stock)').forEach(btn => {
+    container.querySelectorAll('.size-option').forEach(btn => {
       btn.addEventListener('click', () => {
         // Remove active from all
         container.querySelectorAll('.size-option').forEach(b => b.classList.remove('active'));
