@@ -327,30 +327,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         const imageUrl = getPrimaryImage(product.product_images);
         const categoryNames = getCategoryNames(product.categories);
         const price = formatMoney(product.price);
+        const isOutOfStock = product.is_active === false;
         
         return `
-          <article class="product-card fade-in-item" style="animation-delay: ${0.03 * index}s" data-product-id="${product.id}">
+          <article class="product-card fade-in-item ${isOutOfStock ? 'out-of-stock' : ''}" style="animation-delay: ${0.03 * index}s" data-product-id="${product.id}">
             <div class="media-wrap">
+              ${isOutOfStock ? '<div class="out-of-stock-badge">Out of Stock</div>' : ''}
               <img 
                 src="${imageUrl}" 
                 alt="${product.name}"
                 loading="lazy"
                 onerror="this.src='https://via.placeholder.com/400x500?text=Image+Error'"
+                ${isOutOfStock ? 'style="opacity: 0.6;"' : ''}
               >
               <div class="quick-actions">
                 <a class="quick-action-btn" href="product.html?id=${product.id}" title="View details">
                   <i class="bi bi-eye"></i>
                 </a>
+                ${!isOutOfStock ? `
                 <button class="quick-action-btn add-to-cart-btn" data-product-id="${product.id}" title="Add to cart">
                   <i class="bi bi-bag-plus"></i>
                 </button>
+                ` : ''}
               </div>
             </div>
             <div class="product-body">
               <p class="product-meta">${categoryNames}</p>
               <h3 class="product-title">${product.name}</h3>
               <div class="price-row">
-                <span class="price">${price}</span>
+                <span class="price ${isOutOfStock ? 'text-muted' : ''}">${price}</span>
+                ${isOutOfStock ? '<span class="stock-status">Unavailable</span>' : ''}
               </div>
             </div>
           </article>

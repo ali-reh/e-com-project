@@ -1,0 +1,151 @@
+-- -- =====================================================
+-- -- ADMIN PANEL DATABASE SCHEMA
+-- -- Copy and paste this entire file in Supabase SQL Editor
+-- -- =====================================================
+
+-- -- 1. CREATE ADMINS TABLE
+-- -- =====================================================
+-- CREATE TABLE IF NOT EXISTS admins (
+--   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+--   email VARCHAR(255) UNIQUE NOT NULL,
+--   password_hash VARCHAR(255) NOT NULL,
+--   first_name VARCHAR(100) NOT NULL,
+--   last_name VARCHAR(100) NOT NULL,
+--   phone VARCHAR(20),
+--   role VARCHAR(50) DEFAULT 'admin' CHECK (role IN ('super_admin', 'admin', 'manager')),
+--   is_active BOOLEAN DEFAULT true,
+--   last_login TIMESTAMPTZ,
+--   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+--   updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- -- 2. CREATE ADMIN SESSIONS TABLE (for JWT refresh tokens)
+-- -- =====================================================
+-- CREATE TABLE IF NOT EXISTS admin_sessions (
+--   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+--   admin_id UUID NOT NULL REFERENCES admins(id) ON DELETE CASCADE,
+--   refresh_token VARCHAR(500) NOT NULL,
+--   expires_at TIMESTAMPTZ NOT NULL,
+--   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- -- 3. CREATE INDEX FOR FASTER LOOKUPS
+-- -- =====================================================
+-- CREATE INDEX IF NOT EXISTS idx_admins_email ON admins(email);
+-- CREATE INDEX IF NOT EXISTS idx_admin_sessions_token ON admin_sessions(refresh_token);
+-- CREATE INDEX IF NOT EXISTS idx_admin_sessions_admin ON admin_sessions(admin_id);
+
+-- -- 4. UPDATE TRIGGER FOR admins updated_at
+-- -- =====================================================
+-- CREATE OR REPLACE FUNCTION update_admin_updated_at()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--   NEW.updated_at = CURRENT_TIMESTAMP;
+--   RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- DROP TRIGGER IF EXISTS trigger_admins_updated_at ON admins;
+-- CREATE TRIGGER trigger_admins_updated_at
+-- BEFORE UPDATE ON admins
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_admin_updated_at();
+
+-- -- 5. INSERT MAIN ADMIN ACCOUNT
+-- -- Password: AdminAli@2026! (hashed with bcrypt, 10 rounds)
+-- -- =====================================================
+-- INSERT INTO admins (email, password_hash, first_name, last_name, phone, role)
+-- VALUES (
+--   'youssef_ahz@hotmail.com',
+--   '$2b$10$eJZf1p3EMHuR2SzMhDItp.C6xLJ8HNxdn.0saUvnY9FIcfFKABAH6',
+--   'Ali',
+--   'Rehawi',
+--   '+961 81 829 136',
+--   'super_admin'
+-- ) ON CONFLICT (email) DO NOTHING;
+
+-- -- 6. ENABLE ROW LEVEL SECURITY (RLS)
+-- -- =====================================================
+-- ALTER TABLE admins ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE admin_sessions ENABLE ROW LEVEL SECURITY;
+
+-- -- Policy: Allow service role full access
+-- CREATE POLICY "Service role has full access to admins" ON admins
+--   FOR ALL USING (true) WITH CHECK (true);
+
+-- CREATE POLICY "Service role has full access to admin_sessions" ON admin_sessions
+--   FOR ALL USING (true) WITH CHECK (true);
+
+-- -- 7. ANALYTICS VIEW - Daily Order Stats
+-- -- =====================================================
+-- CREATE OR REPLACE VIEW daily_order_stats AS
+-- SELECT 
+--   DATE(created_at) as order_date,
+--   COUNT(*) as total_orders,
+--   SUM(total) as total_revenue,
+--   AVG(total) as avg_order_value,
+--   COUNT(CASE WHEN status = 'delivered' THEN 1 END) as delivered_orders,
+--   COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending_orders,
+--   COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled_orders
+-- FROM orders
+-- GROUP BY DATE(created_at)
+-- ORDER BY order_date DESC;
+
+-- -- 8. ANALYTICS VIEW - Monthly Stats
+-- -- =====================================================
+-- CREATE OR REPLACE VIEW monthly_order_stats AS
+-- SELECT 
+--   DATE_TRUNC('month', created_at) as month,
+--   COUNT(*) as total_orders,
+--   SUM(total) as total_revenue,
+--   AVG(total) as avg_order_value
+-- FROM orders
+-- GROUP BY DATE_TRUNC('month', created_at)
+-- ORDER BY month DESC;
+
+-- -- 9. ANALYTICS VIEW - Top Products
+-- -- =====================================================
+-- CREATE OR REPLACE VIEW top_products AS
+-- SELECT 
+--   oi.product_id,
+--   oi.product_name,
+--   SUM(oi.quantity) as total_sold,
+--   SUM(oi.subtotal) as total_revenue
+-- FROM order_items oi
+-- JOIN orders o ON oi.order_id = o.id
+-- WHERE o.status != 'cancelled'
+-- GROUP BY oi.product_id, oi.product_name
+-- ORDER BY total_sold DESC
+-- LIMIT 10;
+
+-- -- 10. FUNCTION - Get Dashboard Stats
+-- -- =====================================================
+-- CREATE OR REPLACE FUNCTION get_dashboard_stats()
+-- RETURNS JSON AS $$
+-- DECLARE
+--   result JSON;
+-- BEGIN
+--   SELECT json_build_object(
+--     'total_orders', (SELECT COUNT(*) FROM orders),
+--     'total_revenue', (SELECT COALESCE(SUM(total), 0) FROM orders WHERE status != 'cancelled'),
+--     'pending_orders', (SELECT COUNT(*) FROM orders WHERE status = 'pending'),
+--     'delivered_orders', (SELECT COUNT(*) FROM orders WHERE status = 'delivered'),
+--     'total_products', (SELECT COUNT(*) FROM products),
+--     'active_products', (SELECT COUNT(*) FROM products WHERE is_active = true),
+--     'total_categories', (SELECT COUNT(*) FROM categories),
+--     'today_orders', (SELECT COUNT(*) FROM orders WHERE DATE(created_at) = CURRENT_DATE),
+--     'today_revenue', (SELECT COALESCE(SUM(total), 0) FROM orders WHERE DATE(created_at) = CURRENT_DATE AND status != 'cancelled'),
+--     'this_month_orders', (SELECT COUNT(*) FROM orders WHERE DATE_TRUNC('month', created_at) = DATE_TRUNC('month', CURRENT_DATE)),
+--     'this_month_revenue', (SELECT COALESCE(SUM(total), 0) FROM orders WHERE DATE_TRUNC('month', created_at) = DATE_TRUNC('month', CURRENT_DATE) AND status != 'cancelled')
+--   ) INTO result;
+  
+--   RETURN result;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- -- =====================================================
+-- -- DONE! Your admin system is ready.
+-- -- Default Admin Credentials:
+-- -- Email: youssef_ahz@hotmail.com
+-- -- Password: AdminAli@2026!
+-- -- =====================================================

@@ -602,3 +602,44 @@
     color: #999;
     font-size: 0.9rem;
 }
+
+/* Out of Stock Styles */
+.product-card.out-of-stock {
+    opacity: 0.85;
+}
+
+.product-card.out-of-stock .media-wrap {
+    position: relative;
+}
+
+.out-of-stock-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #dc3545;
+    color: white;
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.product-card.out-of-stock .quick-actions {
+    opacity: 0.7;
+}
+
+.stock-status {
+    color: #dc3545;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
+.price.text-muted {
+    color: #999 !important;
+    text-decoration: line-through;
+}

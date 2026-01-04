@@ -636,3 +636,57 @@
 -- --   }
 -- -- ]
 -- -- =====================================================
+
+-- =====================================================
+-- TRIGGER: Auto-disable product when stock is 0
+-- Sets is_active = false when sum of all size stocks = 0
+-- =====================================================
+
+-- -- Function to check and update product is_active based on total stock
+-- CREATE OR REPLACE FUNCTION update_product_availability()
+-- RETURNS TRIGGER AS $$
+-- DECLARE
+--     total_stock INTEGER;
+--     target_product_id UUID;
+-- BEGIN
+--     -- Get the product_id (works for INSERT, UPDATE, and DELETE)
+--     IF TG_OP = 'DELETE' THEN
+--         target_product_id := OLD.product_id;
+--     ELSE
+--         target_product_id := NEW.product_id;
+--     END IF;
+
+--     -- Calculate total stock for this product across all sizes
+--     SELECT COALESCE(SUM(stock), 0) INTO total_stock
+--     FROM product_sizes
+--     WHERE product_id = target_product_id;
+
+--     -- Update is_active based on stock
+--     IF total_stock = 0 THEN
+--         UPDATE products
+--         SET is_active = false, updated_at = CURRENT_TIMESTAMP
+--         WHERE id = target_product_id;
+--     ELSE
+--         -- Optionally re-enable if stock is added back
+--         UPDATE products
+--         SET is_active = true, updated_at = CURRENT_TIMESTAMP
+--         WHERE id = target_product_id AND is_active = false;
+--     END IF;
+
+--     -- Return appropriate record
+--     IF TG_OP = 'DELETE' THEN
+--         RETURN OLD;
+--     ELSE
+--         RETURN NEW;
+--     END IF;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- -- Create trigger on product_sizes table
+-- DROP TRIGGER IF EXISTS trigger_update_product_availability ON product_sizes;
+
+-- CREATE TRIGGER trigger_update_product_availability
+-- AFTER INSERT OR UPDATE OF stock OR DELETE
+-- ON product_sizes
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_product_availability();

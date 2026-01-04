@@ -13,13 +13,144 @@ const CartService = {
       const result = await response.json();
       if (result.success) {
         this.updateCartBadge(result.data.itemCount);
+        
+        // Check if any items were removed due to being out of stock
+        if (result.data.removedItems && result.data.removedItems.length > 0) {
+          this.showRemovedItemsPopup(result.data.removedItems);
+        }
+        
         return result.data;
       }
       throw new Error(result.message || 'Failed to get cart');
     } catch (error) {
       console.error('Error getting cart:', error);
-      return { items: [], total: 0, itemCount: 0 };
+      return { items: [], total: 0, itemCount: 0, removedItems: [] };
     }
+  },
+
+  /**
+   * Show apology popup for removed items (out of stock)
+   */
+  showRemovedItemsPopup(removedItems) {
+    // Remove existing popup if any
+    const existing = document.querySelector('.removed-items-popup-overlay');
+    if (existing) existing.remove();
+
+    const itemNames = removedItems.map(item => item.name).join(', ');
+    const itemCount = removedItems.length;
+    const itemWord = itemCount === 1 ? 'item' : 'items';
+
+    const popupHTML = `
+      <div class="removed-items-popup-overlay">
+        <div class="removed-items-popup">
+          <div class="removed-items-popup-icon">
+            <i class="bi bi-exclamation-circle"></i>
+          </div>
+          <h3>We're Sorry!</h3>
+          <p>The following ${itemWord} ${itemCount === 1 ? 'is' : 'are'} no longer available and ${itemCount === 1 ? 'has' : 'have'} been removed from your cart:</p>
+          <div class="removed-items-list">
+            ${removedItems.map(item => `<span class="removed-item-name">${item.name}</span>`).join('')}
+          </div>
+          <button class="removed-items-popup-close">OK, I Understand</button>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', popupHTML);
+
+    // Add popup styles if not already present
+    if (!document.getElementById('removed-items-popup-styles')) {
+      const styles = document.createElement('style');
+      styles.id = 'removed-items-popup-styles';
+      styles.textContent = `
+        .removed-items-popup-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.6);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+          animation: fadeIn 0.3s ease;
+        }
+        .removed-items-popup {
+          background: white;
+          padding: 2rem;
+          border-radius: 12px;
+          max-width: 400px;
+          width: 90%;
+          text-align: center;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+          animation: slideUp 0.3s ease;
+        }
+        .removed-items-popup-icon {
+          font-size: 3rem;
+          color: #dc3545;
+          margin-bottom: 1rem;
+        }
+        .removed-items-popup h3 {
+          margin: 0 0 0.5rem;
+          color: #333;
+        }
+        .removed-items-popup p {
+          color: #666;
+          margin-bottom: 1rem;
+          font-size: 0.95rem;
+        }
+        .removed-items-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          justify-content: center;
+          margin-bottom: 1.5rem;
+        }
+        .removed-item-name {
+          background: #f8d7da;
+          color: #721c24;
+          padding: 0.25rem 0.75rem;
+          border-radius: 20px;
+          font-size: 0.85rem;
+        }
+        .removed-items-popup-close {
+          background: #333;
+          color: white;
+          border: none;
+          padding: 0.75rem 2rem;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: background 0.2s;
+        }
+        .removed-items-popup-close:hover {
+          background: #555;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(styles);
+    }
+
+    // Close popup on button click
+    const popup = document.querySelector('.removed-items-popup-overlay');
+    popup.querySelector('.removed-items-popup-close').addEventListener('click', () => {
+      popup.remove();
+    });
+
+    // Close on overlay click
+    popup.addEventListener('click', (e) => {
+      if (e.target === popup) {
+        popup.remove();
+      }
+    });
   },
 
   /**
@@ -67,12 +198,12 @@ const CartService = {
   /**
    * Update item quantity
    */
-  async updateQuantity(productId, quantity) {
+  async updateQuantity(productId, quantity, sizeId = null) {
     try {
       const response = await fetch(`/api/cart/item/${productId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity })
+        body: JSON.stringify({ quantity, size_id: sizeId })
       });
       const result = await response.json();
       if (result.success) {
@@ -89,9 +220,13 @@ const CartService = {
   /**
    * Remove item from cart
    */
-  async removeFromCart(productId) {
+  async removeFromCart(productId, sizeId = null) {
     try {
-      const response = await fetch(`/api/cart/item/${productId}`, {
+      let url = `/api/cart/item/${productId}`;
+      if (sizeId) {
+        url += `?size_id=${sizeId}`;
+      }
+      const response = await fetch(url, {
         method: 'DELETE'
       });
       const result = await response.json();

@@ -5,7 +5,7 @@ import { successResponse, errorResponse } from '../utils/responseHandler.js';
 // Get all products
 export const getAllProducts = async (req, res, next) => {
   try {
-    const { limit = 20, offset = 0, category, minPrice, maxPrice, search } = req.query;
+    const { limit = 1000, offset = 0, category, minPrice, maxPrice, search } = req.query;
 
     const filters = {};
     if (category) filters.categoryId = category;
@@ -44,7 +44,7 @@ export const getProduct = async (req, res, next) => {
 // Get featured products
 export const getFeaturedProducts = async (req, res, next) => {
   try {
-    const { limit = 10 } = req.query;
+    const { limit = 1000 } = req.query;
     const products = await Product.getFeatured(parseInt(limit));
 
     successResponse(res, products, 'Featured products retrieved successfully');

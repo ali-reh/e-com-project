@@ -38,7 +38,7 @@ class Order {
   }
 
   // Get all orders with pagination
-  static async getAll(limit = 20, offset = 0, filters = {}) {
+  static async getAll(limit = 1000, offset = 0, filters = {}) {
     let query = supabase
       .from('orders')
       .select(`

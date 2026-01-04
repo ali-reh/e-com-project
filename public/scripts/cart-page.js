@@ -82,19 +82,26 @@ function renderEmptyCart(container) {
  * Render cart items and summary
  */
 function renderCartItems(container, cart) {
-    const itemsHTML = cart.items.map(item => `
-        <div class="cart-item" data-product-id="${item.product_id}">
-            <img src="${item.product?.image_url || '../images/placeholder.jpg'}" alt="${item.product?.name || 'Product'}" class="cart-item-image">
+    const itemsHTML = cart.items.map(item => {
+        // Use display_name which includes size, or fallback to name
+        const displayName = item.product?.display_name || item.product?.name || 'Unknown Product';
+        const maxQty = item.max_quantity || 999;
+        const isAtMax = item.quantity >= maxQty;
+        
+        return `
+        <div class="cart-item" data-product-id="${item.product_id}" data-size-id="${item.size_id || ''}" data-max-qty="${maxQty}">
+            <img src="${item.product?.image_url || '../images/placeholder.jpg'}" alt="${displayName}" class="cart-item-image">
             <div class="cart-item-info">
-                <h3>${item.product?.name || 'Unknown Product'}</h3>
+                <h3>${displayName}</h3>
                 <p class="cart-item-price">${formatMoney(item.product?.price || 0)}</p>
+                ${maxQty < 999 ? `<p class="cart-item-stock">Stock: ${maxQty} available</p>` : ''}
                 <div class="cart-item-actions">
                     <div class="quantity-control">
-                        <button class="qty-decrease" data-product-id="${item.product_id}" aria-label="Decrease quantity">
+                        <button class="qty-decrease" data-product-id="${item.product_id}" data-size-id="${item.size_id || ''}" aria-label="Decrease quantity">
                             <i class="bi bi-dash"></i>
                         </button>
                         <span class="qty-value">${item.quantity}</span>
-                        <button class="qty-increase" data-product-id="${item.product_id}" aria-label="Increase quantity">
+                        <button class="qty-increase ${isAtMax ? 'disabled' : ''}" data-product-id="${item.product_id}" data-size-id="${item.size_id || ''}" ${isAtMax ? 'disabled' : ''} aria-label="Increase quantity">
                             <i class="bi bi-plus"></i>
                         </button>
                     </div>
@@ -102,12 +109,12 @@ function renderCartItems(container, cart) {
             </div>
             <div class="d-flex flex-column align-items-end gap-2">
                 <strong>${formatMoney(item.subtotal)}</strong>
-                <button class="remove-item-btn" data-product-id="${item.product_id}" aria-label="Remove item">
+                <button class="remove-item-btn" data-product-id="${item.product_id}" data-size-id="${item.size_id || ''}" aria-label="Remove item">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 
     container.innerHTML = `
         <div class="cart-layout">
@@ -150,6 +157,7 @@ function attachCartEventListeners() {
         btn.addEventListener('click', async (e) => {
             const button = e.currentTarget;
             const productId = button.dataset.productId;
+            const sizeId = button.dataset.sizeId || null;
             const cartItem = button.closest('.cart-item');
             const qtySpan = button.nextElementSibling;
             const currentQty = parseInt(qtySpan.textContent);
@@ -158,7 +166,7 @@ function attachCartEventListeners() {
                 // If quantity is 1, ask to remove
                 if (confirm('Remove this item from cart?')) {
                     cartItem.style.opacity = '0.5';
-                    await CartService.removeFromCart(productId);
+                    await CartService.removeFromCart(productId, sizeId);
                     await loadCart();
                 }
             } else {
@@ -168,8 +176,15 @@ function attachCartEventListeners() {
                 updateItemSubtotal(cartItem, newQty);
                 updateCartTotals();
                 
+                // Enable increase button if it was disabled
+                const increaseBtn = cartItem.querySelector('.qty-increase');
+                if (increaseBtn) {
+                    increaseBtn.disabled = false;
+                    increaseBtn.classList.remove('disabled');
+                }
+                
                 // API call in background
-                CartService.updateQuantity(productId, newQty);
+                CartService.updateQuantity(productId, newQty, sizeId);
             }
         });
     });
@@ -178,10 +193,20 @@ function attachCartEventListeners() {
     document.querySelectorAll('.qty-increase').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const button = e.currentTarget;
+            if (button.disabled) return;
+            
             const productId = button.dataset.productId;
+            const sizeId = button.dataset.sizeId || null;
             const cartItem = button.closest('.cart-item');
             const qtySpan = button.previousElementSibling;
             const currentQty = parseInt(qtySpan.textContent);
+            const maxQty = parseInt(cartItem.dataset.maxQty) || 999;
+
+            // Check quantity cap
+            if (currentQty >= maxQty) {
+                CartService.showNotification(`Maximum quantity (${maxQty}) reached`, 'error');
+                return;
+            }
 
             // Optimistic UI update
             const newQty = currentQty + 1;
@@ -189,8 +214,14 @@ function attachCartEventListeners() {
             updateItemSubtotal(cartItem, newQty);
             updateCartTotals();
             
+            // Disable button if max reached
+            if (newQty >= maxQty) {
+                button.disabled = true;
+                button.classList.add('disabled');
+            }
+            
             // API call in background
-            CartService.updateQuantity(productId, newQty);
+            CartService.updateQuantity(productId, newQty, sizeId);
         });
     });
 
@@ -198,10 +229,11 @@ function attachCartEventListeners() {
     document.querySelectorAll('.remove-item-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const productId = e.currentTarget.dataset.productId;
+            const sizeId = e.currentTarget.dataset.sizeId || null;
             const cartItem = e.currentTarget.closest('.cart-item');
             if (confirm('Remove this item from cart?')) {
                 cartItem.style.opacity = '0.5';
-                await CartService.removeFromCart(productId);
+                await CartService.removeFromCart(productId, sizeId);
                 await loadCart();
             }
         });

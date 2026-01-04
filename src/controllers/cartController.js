@@ -31,7 +31,14 @@ const getOrCreateGuestId = (req, res) => {
 export const getCart = async (req, res) => {
   try {
     const guestId = getOrCreateGuestId(req, res);
-    const cart = await GuestCart.getCartWithProducts(guestId);
+    // Pass true to automatically remove inactive products from cart
+    const cart = await GuestCart.getCartWithProducts(guestId, true);
+    
+    // Include removed items info in response
+    if (cart.removedItems && cart.removedItems.length > 0) {
+      return successResponse(res, cart, 'Cart retrieved. Some items were removed because they are no longer available.');
+    }
+    
     successResponse(res, cart, 'Cart retrieved successfully');
   } catch (error) {
     errorResponse(res, error);
@@ -44,13 +51,13 @@ export const getCart = async (req, res) => {
 export const addToCart = async (req, res) => {
   try {
     const guestId = getOrCreateGuestId(req, res);
-    const { product_id, quantity = 1 } = req.body;
+    const { product_id, quantity = 1, size_id = null, size_name = null } = req.body;
 
     if (!product_id) {
       return errorResponse(res, { message: 'Product ID is required' }, 400);
     }
 
-    await GuestCart.addItem(guestId, product_id, parseInt(quantity));
+    await GuestCart.addItem(guestId, product_id, parseInt(quantity), size_id, size_name);
     const cart = await GuestCart.getCartWithProducts(guestId);
     
     successResponse(res, cart, 'Item added to cart');
@@ -66,13 +73,13 @@ export const updateCartItem = async (req, res) => {
   try {
     const guestId = getOrCreateGuestId(req, res);
     const { product_id } = req.params;
-    const { quantity } = req.body;
+    const { quantity, size_id = null } = req.body;
 
     if (quantity === undefined) {
       return errorResponse(res, { message: 'Quantity is required' }, 400);
     }
 
-    await GuestCart.updateItemQuantity(guestId, product_id, parseInt(quantity));
+    await GuestCart.updateItemQuantity(guestId, product_id, parseInt(quantity), size_id);
     const cart = await GuestCart.getCartWithProducts(guestId);
     
     successResponse(res, cart, 'Cart updated');
@@ -88,8 +95,9 @@ export const removeFromCart = async (req, res) => {
   try {
     const guestId = getOrCreateGuestId(req, res);
     const { product_id } = req.params;
+    const { size_id = null } = req.query;
 
-    await GuestCart.removeItem(guestId, product_id);
+    await GuestCart.removeItem(guestId, product_id, size_id || null);
     const cart = await GuestCart.getCartWithProducts(guestId);
     
     successResponse(res, cart, 'Item removed from cart');

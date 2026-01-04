@@ -38,20 +38,23 @@ async function loadOrderSummary() {
             return;
         }
 
-        // Render items
-        orderItemsContainer.innerHTML = cart.items.map(item => `
+        // Render items - each size variant is shown separately
+        orderItemsContainer.innerHTML = cart.items.map(item => {
+            // Use display_name which includes size (e.g., "Hoodie - XL")
+            const displayName = item.product?.display_name || item.product?.name || 'Unknown Product';
+            
+            return `
             <div class="order-item">
                 <div class="order-item-image">
-                    <img src="${item.product?.image_url || '../images/placeholder.jpg'}" alt="${item.product?.name || 'Product'}">
+                    <img src="${item.product?.image_url || '../images/placeholder.jpg'}" alt="${displayName}">
                     <span class="item-quantity-badge">${item.quantity}</span>
                 </div>
                 <div class="order-item-details">
-                    <div class="order-item-name">${item.product?.name || 'Unknown Product'}</div>
-                    ${item.size_name ? `<div class="order-item-size">Size: ${item.size_name}</div>` : ''}
+                    <div class="order-item-name">${displayName}</div>
                 </div>
                 <div class="order-item-price">${formatMoney(item.subtotal)}</div>
             </div>
-        `).join('');
+        `}).join('');
 
         // Update totals
         const subtotal = cart.total;
@@ -295,10 +298,12 @@ function collectOrderData() {
         return parts.join(', ');
     };
 
-    // Build order items
+    // Build order items - each size variant is a separate line item
+    // product_name includes size (e.g., "Hoodie - XL") for clear display in emails
     const items = cart.items.map(item => ({
         product_id: item.product_id,
-        product_name: item.product?.name || 'Unknown Product',
+        product_name: item.product?.display_name || item.product?.name || 'Unknown Product',
+        size_id: item.size_id || null,
         size_name: item.size_name || null,
         quantity: item.quantity,
         unit_price: item.product?.price || 0,

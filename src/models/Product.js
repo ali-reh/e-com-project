@@ -27,7 +27,7 @@ class Product {
   }
 
   // Get all products with pagination
-  static async getAll(limit = 20, offset = 0, filters = {}) {
+  static async getAll(limit = 1000, offset = 0, filters = {}) {
     let query = supabase
       .from('products')
       .select(`
@@ -101,7 +101,7 @@ class Product {
   }
 
   // Get featured products
-  static async getFeatured(limit = 10) {
+  static async getFeatured(limit = 1000) {
     const { data, error } = await supabase
       .from('products')
       .select(`

@@ -182,12 +182,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       console.log('Product loaded:', product);
 
+      // Check if product is out of stock (is_active = false)
+      const isOutOfStock = product.is_active === false;
+
       // Restore the product main HTML structure first
       const productMain = document.querySelector('.product-main');
       productMain.classList.add('fade-in');
       productMain.innerHTML = `
         <!-- Image Gallery -->
         <div class="product-gallery">
+          ${isOutOfStock ? '<div class="product-out-of-stock-badge">Out of Stock</div>' : ''}
           <div class="gallery-main"></div>
           <div class="gallery-thumbs"></div>
         </div>
@@ -196,11 +200,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="product-info">
           <div class="product-header">
             <h1 class="product-name"></h1>
+            ${isOutOfStock ? '<span class="out-of-stock-label">Currently Unavailable</span>' : ''}
           </div>
 
           <div class="product-price-section">
             <div class="price-group">
-              <span class="current-price"></span>
+              <span class="current-price ${isOutOfStock ? 'price-unavailable' : ''}"></span>
             </div>
           </div>
 
@@ -215,6 +220,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
 
           <div class="product-actions">
+            ${!isOutOfStock ? `
             <div class="quantity-selector">
               <button class="qty-btn" id="decreaseQty">−</button>
               <input type="number" id="quantity" value="1" min="1" readonly>
@@ -223,6 +229,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             <button class="btn-add-to-cart primary-color-btn">
               <i class="bi bi-bag-plus"></i> Add to Cart
             </button>
+            ` : `
+            <button class="btn-add-to-cart btn-out-of-stock" disabled>
+              <i class="bi bi-x-circle"></i> Out of Stock
+            </button>
+            `}
           </div>
 
           <div class="product-features">
@@ -255,11 +266,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderProductInfo(product);
       renderImageGallery(product.product_images);
 
-      // Fetch and render sizes
-      await loadProductSizes(product.id);
-
-      // Attach event listeners after rendering
-      attachProductListeners(product);
+      // Fetch and render sizes (only if product is active)
+      if (!isOutOfStock) {
+        await loadProductSizes(product.id);
+        // Attach event listeners after rendering
+        attachProductListeners(product);
+      }
 
       // Signal that data loading is complete
       if (typeof window.dataLoadComplete === 'function') {

@@ -6,7 +6,7 @@ import EmailService from '../utils/emailService.js';
 // Get all orders
 export const getAllOrders = async (req, res, next) => {
   try {
-    const { limit = 20, offset = 0, status } = req.query;
+    const { limit = 1000, offset = 0, status } = req.query;
 
     const filters = {};
     if (status) filters.status = status;
