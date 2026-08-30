@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import supabase from '../config/supabase.js';
 import bcrypt from 'bcrypt';
 
@@ -188,3 +189,4 @@ class Admin {
 }
 
 export default Admin;
+

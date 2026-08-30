@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import Order from '../models/Order.js';
 import { successResponse, errorResponse } from '../utils/responseHandler.js';
 import { validateOrder } from '../utils/validators.js';
@@ -188,3 +189,4 @@ export const checkout = async (req, res, next) => {
     errorResponse(res, { message: 'Failed to place order. Please try again.' }, 500);
   }
 };
+

@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
 import { errorResponse } from '../utils/responseHandler.js';
@@ -170,3 +171,4 @@ export default {
   requireAdmin,
   optionalAuth
 };
+

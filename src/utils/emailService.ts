@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import transporter from '../config/mailtrap.js';
 
 /**
@@ -58,7 +59,7 @@ const EmailService = {
                 <tr>
                   <td style="background-color: #fff8e1; border-left: 4px solid #ffc107; padding: 15px 20px; border-radius: 4px;">
                     <p style="margin: 0; color: #856404; font-size: 14px;">
-                      <strong>📬 New Message Received</strong> — ${currentDate}
+                      <strong>ðŸ“¬ New Message Received</strong> â€” ${currentDate}
                     </p>
                   </td>
                 </tr>
@@ -81,7 +82,7 @@ const EmailService = {
                       <tr>
                         <td style="width: 40px; vertical-align: top;">
                           <div style="width: 36px; height: 36px; background-color: rgba(41, 121, 77, 0.1); border-radius: 8px; text-align: center; line-height: 36px;">
-                            👤
+                            ðŸ‘¤
                           </div>
                         </td>
                         <td style="padding-left: 15px; vertical-align: middle;">
@@ -100,7 +101,7 @@ const EmailService = {
                       <tr>
                         <td style="width: 40px; vertical-align: top;">
                           <div style="width: 36px; height: 36px; background-color: rgba(41, 121, 77, 0.1); border-radius: 8px; text-align: center; line-height: 36px;">
-                            ✉️
+                            âœ‰ï¸
                           </div>
                         </td>
                         <td style="padding-left: 15px; vertical-align: middle;">
@@ -121,7 +122,7 @@ const EmailService = {
                       <tr>
                         <td style="width: 40px; vertical-align: top;">
                           <div style="width: 36px; height: 36px; background-color: rgba(41, 121, 77, 0.1); border-radius: 8px; text-align: center; line-height: 36px;">
-                            📋
+                            ðŸ“‹
                           </div>
                         </td>
                         <td style="padding-left: 15px; vertical-align: middle;">
@@ -170,7 +171,7 @@ const EmailService = {
                       This email was sent from the contact form on your website
                     </p>
                     <p style="margin: 0; color: #999; font-size: 12px;">
-                      © ${new Date().getFullYear()} BRAND. All rights reserved.
+                      Â© ${new Date().getFullYear()} BRAND. All rights reserved.
                     </p>
                   </td>
                 </tr>
@@ -265,7 +266,7 @@ Reply to this customer: ${email}
           <!-- Content -->
           <tr>
             <td style="padding: 40px 30px;">
-              <h2 style="margin: 0 0 20px 0; color: #333; font-size: 24px;">Thank You, ${firstName}! 👋</h2>
+              <h2 style="margin: 0 0 20px 0; color: #333; font-size: 24px;">Thank You, ${firstName}! ðŸ‘‹</h2>
               
               <p style="margin: 0 0 20px 0; color: #555; font-size: 16px; line-height: 1.7;">
                 We've received your message regarding <strong>"${subjectLabel}"</strong> and our team is already on it!
@@ -273,7 +274,7 @@ Reply to this customer: ${email}
 
               <div style="background-color: #f0f9f4; border-radius: 8px; padding: 20px; margin: 25px 0;">
                 <p style="margin: 0; color: rgb(41, 121, 77); font-size: 15px;">
-                  <strong>⏱️ Expected Response Time:</strong> Within 24-48 business hours
+                  <strong>â±ï¸ Expected Response Time:</strong> Within 24-48 business hours
                 </p>
               </div>
 
@@ -299,7 +300,7 @@ Reply to this customer: ${email}
                 Need immediate help? Reach us at <a href="mailto:support@brand.com" style="color: rgb(41, 121, 77);">support@brand.com</a>
               </p>
               <p style="margin: 0; color: #999; font-size: 12px;">
-                © ${new Date().getFullYear()} BRAND. All rights reserved.
+                Â© ${new Date().getFullYear()} BRAND. All rights reserved.
               </p>
             </td>
           </tr>
@@ -382,7 +383,7 @@ Reply to this customer: ${email}
           <tr>
             <td style="padding: 40px 30px 20px 30px; text-align: center;">
               <div style="width: 70px; height: 70px; background: linear-gradient(135deg, rgb(41, 121, 77) 0%, rgb(34, 100, 64) 100%); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                <span style="font-size: 30px;">✓</span>
+                <span style="font-size: 30px;">✅</span>
               </div>
               <h2 style="margin: 0 0 10px 0; color: #333; font-size: 24px;">Thank You for Your Order!</h2>
               <p style="margin: 0; color: #666; font-size: 16px;">Order #${order.order_number}</p>
@@ -447,7 +448,7 @@ Reply to this customer: ${email}
               <p style="margin: 0; color: #666; line-height: 1.6;">
                 ${order.customer_name}<br>
                 ${order.shipping_address}<br>
-                📞 ${order.customer_phone}
+                ðŸ“ž ${order.customer_phone}
               </p>
             </td>
           </tr>
@@ -460,7 +461,7 @@ Reply to this customer: ${email}
               <p style="margin: 0; color: #666; line-height: 1.6;">
                 ${order.billing_details ? `${order.billing_details.firstName} ${order.billing_details.lastName}<br>` : ''}
                 ${order.billing_address}<br>
-                ${order.billing_details?.phone ? `📞 ${order.billing_details.phone}` : ''}
+                ${order.billing_details?.phone ? `ðŸ“ž ${order.billing_details.phone}` : ''}
               </p>
             </td>
           </tr>
@@ -471,7 +472,7 @@ Reply to this customer: ${email}
             <td style="padding: 0 30px 30px 30px;">
               <div style="background-color: #fff8e1; border-left: 4px solid #ffc107; padding: 15px 20px; border-radius: 4px;">
                 <p style="margin: 0; color: #856404; font-size: 14px;">
-                  <strong>💵 Cash on Delivery</strong> — Pay when your order arrives
+                  <strong>ðŸ’µ Cash on Delivery</strong> â€” Pay when your order arrives
                 </p>
               </div>
             </td>
@@ -493,7 +494,7 @@ Reply to this customer: ${email}
                 Questions? Contact us at <a href="mailto:support@brand.com" style="color: rgb(41, 121, 77);">support@brand.com</a>
               </p>
               <p style="margin: 0; color: #999; font-size: 12px;">
-                © ${new Date().getFullYear()} BRAND. All rights reserved.
+                Â© ${new Date().getFullYear()} BRAND. All rights reserved.
               </p>
             </td>
           </tr>
@@ -563,7 +564,7 @@ Reply to this customer: ${email}
           <!-- Header -->
           <tr>
             <td style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; text-align: center;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700;">🛒 NEW ORDER RECEIVED</h1>
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700;">ðŸ›’ NEW ORDER RECEIVED</h1>
               <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.8); font-size: 14px;">${currentDate}</p>
             </td>
           </tr>
@@ -589,7 +590,7 @@ Reply to this customer: ${email}
           <!-- Customer Details -->
           <tr>
             <td style="padding: 0 30px 25px 30px;">
-              <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #eee; padding-bottom: 10px;">👤 Customer Information</h3>
+              <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #eee; padding-bottom: 10px;">ðŸ‘¤ Customer Information</h3>
               <table role="presentation" style="width: 100%; border-collapse: collapse;">
                 <tr>
                   <td style="padding: 8px 0; color: #666; width: 120px;">Name:</td>
@@ -610,7 +611,7 @@ Reply to this customer: ${email}
           <!-- Shipping Address -->
           <tr>
             <td style="padding: 0 30px 20px 30px;">
-              <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #eee; padding-bottom: 10px;">📦 Shipping Address</h3>
+              <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #eee; padding-bottom: 10px;">ðŸ“¦ Shipping Address</h3>
               <div style="background-color: #f8f9fa; padding: 15px 20px; border-radius: 8px; border-left: 4px solid rgb(41, 121, 77);">
                 <p style="margin: 0; color: #333; line-height: 1.7;">${order.shipping_address}</p>
               </div>
@@ -621,12 +622,12 @@ Reply to this customer: ${email}
           ${order.billing_address && order.billing_address !== order.shipping_address ? `
           <tr>
             <td style="padding: 0 30px 25px 30px;">
-              <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #eee; padding-bottom: 10px;">🧾 Billing Address</h3>
+              <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #eee; padding-bottom: 10px;">ðŸ§¾ Billing Address</h3>
               <div style="background-color: #f8f9fa; padding: 15px 20px; border-radius: 8px; border-left: 4px solid #6c757d;">
                 <p style="margin: 0; color: #333; line-height: 1.7;">
                   ${order.billing_details ? `<strong>${order.billing_details.firstName} ${order.billing_details.lastName}</strong><br>` : ''}
                   ${order.billing_address}<br>
-                  ${order.billing_details?.phone ? `📞 ${order.billing_details.phone}` : ''}
+                  ${order.billing_details?.phone ? `ðŸ“ž ${order.billing_details.phone}` : ''}
                 </p>
               </div>
             </td>
@@ -636,7 +637,7 @@ Reply to this customer: ${email}
           <!-- Order Items -->
           <tr>
             <td style="padding: 0 30px 25px 30px;">
-              <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #eee; padding-bottom: 10px;">📋 Order Items</h3>
+              <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #eee; padding-bottom: 10px;">ðŸ“‹ Order Items</h3>
               <table role="presentation" style="width: 100%; border-collapse: collapse; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
                 <thead>
                   <tr style="background-color: #f8f9fa;">
@@ -679,7 +680,7 @@ Reply to this customer: ${email}
             <td style="padding: 0 30px 30px 30px;">
               <div style="background-color: #fff8e1; border: 1px solid #ffc107; padding: 15px 20px; border-radius: 8px; text-align: center;">
                 <p style="margin: 0; color: #856404; font-size: 15px; font-weight: 500;">
-                  💵 Payment Method: Cash on Delivery (COD)
+                  ðŸ’µ Payment Method: Cash on Delivery (COD)
                 </p>
               </div>
             </td>
@@ -705,7 +706,7 @@ Reply to this customer: ${email}
     const mailOptions = {
       from: '"BRAND Orders" <orders@brand.com>',
       to: 'youssef_ahz@hotmail.com',
-      subject: `🛒 New Order #${order.order_number} - $${parseFloat(order.total).toFixed(2)}`,
+      subject: `ðŸ›’ New Order #${order.order_number} - $${parseFloat(order.total).toFixed(2)}`,
       html: htmlContent
     };
 
@@ -721,3 +722,4 @@ Reply to this customer: ${email}
 };
 
 export default EmailService;
+

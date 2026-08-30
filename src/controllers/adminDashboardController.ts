@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import supabase from '../config/supabase.js';
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
@@ -605,3 +606,4 @@ export const updateProductStock = async (req, res) => {
     errorResponse(res, error);
   }
 };
+

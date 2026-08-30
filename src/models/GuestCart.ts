@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import supabase from '../config/supabase.js';
 
 class GuestCart {
@@ -231,3 +232,4 @@ class GuestCart {
 }
 
 export default GuestCart;
+

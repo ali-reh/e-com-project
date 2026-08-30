@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import supabase from '../config/supabase.js';
 
 class Order {
@@ -119,3 +120,4 @@ class Order {
 }
 
 export default Order;
+

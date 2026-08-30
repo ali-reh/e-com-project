@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import Admin from '../models/Admin.js';
 import jwt from 'jsonwebtoken';
 import { successResponse, errorResponse } from '../utils/responseHandler.js';
@@ -351,3 +352,4 @@ export const verifyToken = async (req, res) => {
     errorResponse(res, error);
   }
 };
+

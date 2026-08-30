@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import supabase from '../config/supabase.js';
 
 class Category {
@@ -60,3 +61,4 @@ class Category {
 }
 
 export default Category;
+

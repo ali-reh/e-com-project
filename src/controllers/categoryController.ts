@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import Category from '../models/Category.js';
 import { successResponse, errorResponse } from '../utils/responseHandler.js';
 

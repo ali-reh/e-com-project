@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 // Standard success response
 export const successResponse = (res, data, message = 'Success', statusCode = 200) => {
   res.status(statusCode).json({
@@ -30,3 +31,4 @@ export const paginatedResponse = (res, data, page, limit, total, message = 'Succ
     }
   });
 };
+

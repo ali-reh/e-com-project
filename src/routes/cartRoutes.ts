@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import express from 'express';
 import {
   getCart,
@@ -29,3 +30,4 @@ router.delete('/item/:product_id', removeFromCart);
 router.delete('/clear', clearCart);
 
 export default router;
+

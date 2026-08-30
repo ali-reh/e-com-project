@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import Product from '../models/Product.js';
 import ProductImage from '../models/ProductImage.js';
 import { successResponse, errorResponse } from '../utils/responseHandler.js';

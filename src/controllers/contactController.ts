@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import EmailService from '../utils/emailService.js';
 import { successResponse, errorResponse } from '../utils/responseHandler.js';
 
@@ -36,3 +37,4 @@ export const submitContactForm = async (req, res) => {
     errorResponse(res, { message: 'Failed to send message. Please try again later.' }, 500);
   }
 };
+

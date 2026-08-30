@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import express from 'express';
 import {
   getAllOrders,
@@ -23,3 +24,4 @@ router.put('/:id/status', updateOrderStatus);
 router.delete('/:id', deleteOrder);
 
 export default router;
+

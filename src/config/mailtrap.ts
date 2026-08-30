@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
@@ -17,8 +18,9 @@ transporter.verify((error, success) => {
   if (error) {
     console.error('Gmail connection error:', error);
   } else {
-    console.log('✓ Gmail email server ready');
+    console.log('✅ Gmail email server ready');
   }
 });
 
 export default transporter;
+

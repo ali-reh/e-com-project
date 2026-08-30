@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 // Email validation
 export const isValidEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

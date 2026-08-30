@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 import GuestCart from '../models/GuestCart.js';
 import { successResponse, errorResponse } from '../utils/responseHandler.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -133,3 +134,4 @@ export const getCartCount = async (req, res) => {
     errorResponse(res, error);
   }
 };
+
