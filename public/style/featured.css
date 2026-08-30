@@ -1,0 +1,237 @@
+:root {
+  --featured-gap: 1.25rem;
+}
+
+.featured-wrap {
+  padding: 4rem 0;
+}
+
+.featured-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: slideUp 0.6s ease-out both;
+}
+
+.featured-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 0.35rem;
+}
+
+.featured-subtitle {
+  font-size: 0.95rem;
+  color: #888;
+}
+
+/* GRID */
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--featured-gap);
+}
+
+/* CARD - Minimal Clean */
+.product-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  animation: fadeInSlide 0.5s ease-out both;
+  cursor: pointer;
+  position: relative;
+}
+
+.product-card:nth-child(1) { animation-delay: 0.05s; }
+.product-card:nth-child(2) { animation-delay: 0.1s; }
+.product-card:nth-child(3) { animation-delay: 0.15s; }
+.product-card:nth-child(4) { animation-delay: 0.2s; }
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* IMAGE - Larger aspect ratio */
+.media-wrap {
+  position: relative;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.media-wrap img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.product-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Quick Actions Overlay */
+.quick-actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 100%);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .quick-actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quick-action-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #333;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.quick-action-btn:hover {
+  background: var(--primary-color);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.quick-action-btn.active,
+.quick-action-btn.active:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+/* Legacy button styles (for backwards compatibility) */
+.add-cart,
+.product-view-btn {
+  display: none;
+}
+
+/* BODY - Minimal */
+.product-body {
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+
+.product-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-meta {
+  font-size: 0.75rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+/* PRICE - Centered */
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.badge-sale {
+  background: #ffe8e8;
+  color: #e53935;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1199.98px) {
+  .featured-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 991.98px) {
+  .featured-grid { grid-template-columns: repeat(2, 1fr); }
+  
+  .quick-actions {
+    opacity: 1;
+    transform: translateY(0);
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+  }
+}
+
+@media (max-width: 575.98px) {
+  :root {
+    --featured-gap: 0.75rem;
+  }
+  
+  .featured-wrap {
+    padding: 3rem 0;
+  }
+  
+  .featured-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .product-body {
+    padding: 1rem 0.75rem;
+  }
+  
+  .product-title {
+    font-size: 0.9rem;
+  }
+  
+  .quick-action-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+}

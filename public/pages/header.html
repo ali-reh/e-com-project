@@ -1,0 +1,76 @@
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light shadow px-lg-5" id="navbar">
+            <div class="container d-flex flex-row align-items-center justify-content-between">
+                <a href="../" class="brand navbar-brand order-2 order-lg-1">
+                    BRAND
+                </a>
+
+                <a class="navbar-toggler border-0 order-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="bi bi-list menu-button"></i>
+                </a>
+
+                <div class="collapse navbar-collapse order-4 order-lg-2" id="collapsibleNavbar">
+                    <ul class="navbar-nav mx-auto" id="pages-links">
+                        <li class="nav-item"><a href="../" class="nav-link">Home</a></li>
+                        <li class="nav-item"><a href="../pages/shop.html" class="nav-link">Shop</a></li>
+                        <li class="nav-item"><a href="../pages/about.html" class="nav-link">About</a></li>
+                        <li class="nav-item"><a href="../pages/contact.html" class="nav-link">Contact</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link" id="categories-btn">Categories →</a></li>
+                    </ul>
+                </div>
+
+                <ul class="navbar-nav d-flex flex-row gap-3 order-3 justify-content-center align-items-center" id="nav-icons">
+                    <li class="nav-item">
+                        <a href="../pages/cart.html" class="nav-link active cart-icon-wrap" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Cart" aria-label="Cart">
+                            <i class="bi bi-cart2"></i>
+                            <span id="cart-badge">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" id="search-btn" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Search" aria-label="Search">
+                            <i class="bi bi-search"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Search Modal -->
+    <div class="search-overlay" id="search-overlay"></div>
+    <div class="search-modal" id="search-modal">
+        <div class="search-modal-header">
+            <div class="search-input-wrap">
+                <i class="bi bi-search"></i>
+                <input type="text" id="search-modal-input" placeholder="Search products..." autocomplete="off">
+                <button class="search-clear-btn" id="search-clear-btn" aria-label="Clear search">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <button class="search-close-btn" id="search-close-btn" aria-label="Close search">
+                <span>ESC</span>
+            </button>
+        </div>
+        <div class="search-results" id="search-results">
+            <div class="search-placeholder">
+                <i class="bi bi-search"></i>
+                <p>Start typing to search products...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories Sidebar -->
+    <div class="categories-overlay" id="categories-overlay"></div>
+    <aside class="categories-sidebar" id="categories-sidebar">
+        <div class="sidebar-header">
+            <h3 class="luxury-font">Categories</h3>
+            <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close sidebar">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="categories-list" id="categories-list">
+                <!-- Categories will be loaded dynamically -->
+            </ul>
+        </div>
+    </aside>
