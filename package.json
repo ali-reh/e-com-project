@@ -23,6 +23,7 @@
   "homepage": "https://github.com/ali-reh/e-com-project#readme",
   "dependencies": {
     "@supabase/supabase-js": "^2.89.0",
+    "@types/node": "^26.4.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^2.2.1",
     "bootstrap-icons": "^1.13.1",
@@ -32,16 +33,15 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "nodemailer": "^7.0.12",
+    "typescript": "^7.0.2",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/node": "^26.4.0",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
-    "tsx": "^4.23.13",
-    "typescript": "^7.0.2"
+    "tsx": "^4.23.13"
   }
 }
