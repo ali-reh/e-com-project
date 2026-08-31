@@ -8,7 +8,6 @@ node_modules/
 
 # Build outputs
 dist/
-public/dist/
 build/
 
 # Logs
