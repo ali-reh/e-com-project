@@ -18,6 +18,7 @@ esbuild.buildSync({
   bundle: false,
   minify: true,
   sourcemap: false,
+  tsconfig: path.join(__dirname, 'tsconfig.frontend.json'),
 });
 
 console.log(`✅ Built ${files.length} frontend scripts`);
